@@ -21,18 +21,18 @@ class example_form extends plugme_form
             'required' => false,
             'description' => 'Example of description for "switch" element (css checkbox).',
         ),
-        'gender' => array(
-            'type'     => 'select',
-            'label'    => 'Gender',
-            'required' => false,
-            'options'  => array(
-                'male'    => 'Male',
-                'female'  => 'Female',
-                'other'   => 'Other',
-                'unknown' => 'Unknown'
-            ),
-            'description' => 'Example of description for "select" element.',
-        ),
+        // 'gender' => array(
+        //     'type'     => 'select',
+        //     'label'    => 'Gender',
+        //     'required' => false,
+        //     'options'  => array(
+        //         'male'    => 'Male',
+        //         'female'  => 'Female',
+        //         'other'   => 'Other',
+        //         'unknown' => 'Unknown'
+        //     ),
+        //     'description' => 'Example of description for "select" element.',
+        // ),
         'dateofbirth' => array(
             'type'     => 'datepicker',
             'label'    => 'Date of birth',

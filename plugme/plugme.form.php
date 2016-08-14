@@ -42,11 +42,12 @@ abstract class plugme_form
     /**
      * Don't overload those props
      */
-    protected $db; //link to $wpdb
-    protected $data = array(); // loaded data
-    protected $new_item = false;
-    protected $assets_url;
-    protected $has_errors = false;
+    protected $db;                   // link to $wpdb
+    protected $data_source;          // plugme_data_source instance
+    protected $data       = array(); // loaded data
+    protected $new_item   = false;   // is a new item
+    protected $assets_url;           // plugme assets url
+    protected $has_errors = false;   // form has error @see
 
 
     /**
@@ -74,11 +75,13 @@ abstract class plugme_form
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(plugme_data_source $data_source)
     {
         global $wpdb;
 
         $this->db = $wpdb;
+
+        $this->data_source = $data_source;
 
         $this->init();
 

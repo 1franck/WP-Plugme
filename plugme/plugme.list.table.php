@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PlugMe list table
+ * Plugme List Table
  *
  * @author  Francois Lajoie
  */
@@ -15,10 +15,13 @@ abstract class plugme_list_table extends plugme_wp_list_table
     /**
      * Overload those props as you need
      */
-    protected $data_source            = 'sql';   // sql or raw
-    protected $data_source_table      = '';      // if data source is sql, we need to specify the table name
+    // protected $data_source            = 'sql';   // sql or raw
+    // protected $data_source_table      = '';      // if data source is sql, we need to specify the table name
 
-    protected $primary_column         = 'id';    // primary key column name
+
+
+
+    //protected $primary_column         = 'id';    // primary key column name
     protected $search_column          = 'id';    // column name used for search
     protected $action_column          = '';      // define wich column will receive action(s) link(s) @see default_action_column()
     protected $default_orderby_column = 'id';    // default column used for ordering
@@ -40,8 +43,10 @@ abstract class plugme_list_table extends plugme_wp_list_table
     /**
      * Don't overload those props
      */
-    protected $db; //link to $wpdb
-    protected $data_source_query; //database query generated
+    
+    protected $db;                // link to wordpress $wpdb
+    protected $data_source;       // link to a plugme_data_source instance
+    protected $data_source_query; // database query generated
 
 
     /**
@@ -66,11 +71,13 @@ abstract class plugme_list_table extends plugme_wp_list_table
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct(plugme_data_source $data_source)
     {
         global $status, $page, $wpdb;
 
         $this->db = $wpdb;
+
+        $this->data_source = $data_source;
                 
         //Set parent defaults
         parent::__construct($this->options);
@@ -108,13 +115,13 @@ abstract class plugme_list_table extends plugme_wp_list_table
                 '<a href="?page=%s&action=%s&'.$this->options['singular'].'=%s">'.__('Edit').'</a>',
                 $_REQUEST['page'],
                 'edit',
-                $item[$this->primary_column]
+                $item[$this->data_source->table_pk]
             ),
             'delete'    => sprintf(
                 '<a href="?page=%s&action=%s&'.$this->options['singular'].'=%s">'.__('Delete').'</a>',
                 $_REQUEST['page'],
                 'delete',
-                $item[$this->primary_column]
+                $item[$this->data_source->table_pk]
             ),
         );
 
@@ -124,7 +131,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
         //Return the column cell contents
         return sprintf('<b>%1$s</b> <span style="color:silver">(#%2$s)</span>%3$s',
             /*$1%s*/ $item[$this->action_column],
-            /*$2%s*/ __($item[$this->primary_column]),
+            /*$2%s*/ __($item[$this->data_source->table_pk]),
             /*$3%s*/ $this->row_actions($actions)
         );
     }
@@ -141,7 +148,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
             /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
-            /*$2%s*/ $item[$this->primary_column] //The value of the checkbox should be the record's id
+            /*$2%s*/ $item[$this->data_source->table_pk] //The value of the checkbox should be the record's id
         );
     }
 
@@ -253,10 +260,10 @@ abstract class plugme_list_table extends plugme_wp_list_table
         $current_page = $this->get_pagenum();
 
         // data from database
-        if($this->data_source === 'sql') {
+        if($this->data_source->type === 'sql') {
             $data = $this->_sql_data_source($current_page);
             $count_result = $this->db->get_row( 
-                'SELECT count('.$this->primary_column.') as c FROM `'.$this->data_source_table.'`', 
+                'SELECT count('.$this->data_source->table_pk.') as c FROM `'.$this->data_source_table.'`', 
                 ARRAY_A
             );
             if(!empty($count_result)) {
@@ -265,13 +272,13 @@ abstract class plugme_list_table extends plugme_wp_list_table
 
         }
         //date from array and cie
-        elseif($this->data_source === 'raw') {
+        elseif($this->data_source->type === 'raw') {
             $data = $this->set_data();
             $total_items = count($data);
             $data = array_slice($data,(($current_page-1)*$per_page),$per_page);
         }
         else {
-            wp_die("Invalid data source provider! Must be 'sql' or 'raw'");
+            wp_die(__CLASS__.': Invalid data source provider! Must be \'sql\' or \'raw\' only');
         }
 
         $this->items = $data;

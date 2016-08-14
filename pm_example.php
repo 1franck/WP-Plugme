@@ -37,8 +37,8 @@ add_action('admin_menu', 'pm_example_admin_menu');
 function pm_example_admin_menu()
 {
     add_menu_page( 
-        'PlugMe', //page title
-        'PlugMe Demo', //menu title
+        'Plugme', //page title
+        'Plugme Demo', //menu title
         'manage_options', //capability
         'plugme_menu', //menu slug
         'pm_example_admin_content', //tpl func 
@@ -52,5 +52,5 @@ function pm_example_admin_content()
     if ( !current_user_can( 'manage_options' ) )  {
         wp_die( __( 'You do not have sufficient permissions to access this page.' ) );
     }
-    include dirname(__FILE__).'/admin/members.tpl.php';
+    include dirname(__FILE__).'/adminpage.tpl.php';
 }

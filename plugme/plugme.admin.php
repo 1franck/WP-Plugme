@@ -1,11 +1,11 @@
 <?php
 
 /**
- * Plugme utils class
+ * Plugme admin utils class
  *
  * @author Francois Lajoie
  */
-class plugme
+class plugme_admin
 {
 
     protected $list_table; // instance of plugme_list_table

@@ -21,18 +21,18 @@ class example_form extends plugme_form
             'required' => false,
             'description' => 'Example of description for "switch" element (css checkbox).',
         ),
-        // 'gender' => array(
-        //     'type'     => 'select',
-        //     'label'    => 'Gender',
-        //     'required' => false,
-        //     'options'  => array(
-        //         'male'    => 'Male',
-        //         'female'  => 'Female',
-        //         'other'   => 'Other',
-        //         'unknown' => 'Unknown'
-        //     ),
-        //     'description' => 'Example of description for "select" element.',
-        // ),
+        'gender' => array(
+            'type'     => 'select',
+            'label'    => 'Gender',
+            'required' => false,
+            'options'  => array(
+                'male'    => 'Male',
+                'female'  => 'Female',
+                'other'   => 'Other',
+                'unknown' => 'Unknown'
+            ),
+            'description' => 'Example of description for "select" element.',
+        ),
         'dateofbirth' => array(
             'type'     => 'datepicker',
             'label'    => 'Date of birth',
@@ -48,13 +48,13 @@ class example_form extends plugme_form
             'multiple' => false,
             'description' => 'Example of description for "chosen" element. (use chosen js)',
         ),
-        'biography' => array(
+        'bio' => array(
             'type'     => 'texteditor',
             'label'    => 'Biography',
             'required' => false,
             'description' => 'Example of description for "texteditor" element. (use wp_editor)',
         ),
-        'profile_image' => array(
+        'image' => array(
             'type'     => 'image',
             'label'    => 'Profile image',
             'required' => false,
@@ -67,12 +67,12 @@ class example_form extends plugme_form
             
         ),
 
-        'slider' => array(
-            'type'     => 'slider',
-            'label'    => 'Quote',
-            'required' => false,
+        // 'slider' => array(
+        //     'type'     => 'slider',
+        //     'label'    => 'Quote',
+        //     'required' => false,
             
-        ),
+        // ),
     );
 
     public function init()

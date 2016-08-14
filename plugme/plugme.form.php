@@ -9,9 +9,7 @@ abstract class plugme_form
     /**
      * Overload those props as you need
      */
-    protected $data_source_table = '';
-    protected $primary_column    = 'id';    // primary key column name
-    protected $form_fields       = array();
+    protected $form_fields = array();
 
     /**
      * Examples for $form_fields
@@ -175,19 +173,11 @@ abstract class plugme_form
      */
     public function load_data_id($id)
     {
-        $id = esc_sql($id);
+        $this->data = $this->data_source->get($id);
 
-        $query = 'SELECT * FROM `'.$this->data_source_table.'` WHERE `'.$this->primary_column.'` = "'.$id.'"';
-        //echo $query;
-        $result = $this->db->get_row($query, ARRAY_A);
-
-        if(empty($result)) {
-            wp_die('No record found for '.$this->primary_column.'['.$id.']');
+        if(empty($this->data)) {
+            wp_die(__CLASS__.': No record found for '.$this->data_source->table_pk.'['.esc_sql($id).']');
         }
-
-        //print_r($result);
-
-        $this->data = $result;
     }
 
     /**
@@ -224,7 +214,9 @@ abstract class plugme_form
         }
 
         if(!array_key_exists($name, $this->data)) {
-            if($name !== 'submit') wp_die('Field '.$name.' doesn\'t exists');
+            if($name !== 'submit') {
+                wp_die(__CLASS__.': Field "'.$name.'" doesn\'t exists');
+            }
         }
         else {
             return stripslashes($this->data[$name]);
@@ -295,7 +287,7 @@ abstract class plugme_form
 
             // existing item
             if(!$this->new_item) {
-                echo '<input type="hidden" name="'.$this->primary_column.'" value="'.$this->get_data($this->primary_column).'">';
+                echo '<input type="hidden" name="'.$this->data_source->table_pk.'" value="'.$this->get_data($this->data_source->table_pk).'">';
             }
 
             // form buttons
@@ -348,7 +340,7 @@ abstract class plugme_form
 
     public function save_data()
     {
-        if(empty($_POST[$this->primary_column])) {
+        if(empty($_POST[$this->data_source->table_pk])) {
             //insert
 
             $data_to_save = $this->strip_unwanted_column($_POST);
@@ -371,7 +363,7 @@ abstract class plugme_form
                 $this->data_source_table,
                 $data_to_save,
                 array(
-                    $this->primary_column => $_POST[$this->primary_column]
+                    $this->data_source->table_pk => $_POST[$this->data_source->table_pk]
                 )
             );
         }

@@ -46,4 +46,25 @@ abstract class plugme_data_source
     {
         return $this->$name;
     }
+
+    /**
+     * Get a record
+     * 
+     * @param  mixed  $what   data to look for
+     * @param  mixed  $column column name to look in
+     * @param  string $field  field(s) to get, by default '*'
+     * @return mixed
+     */
+    public function get($what, $column = null, $field = '*', $return_type = ARRAY_A)
+    {
+        $what = esc_sql($what);
+        if(!isset($column)) $column = $this->table_pk;
+
+        $query = 'SELECT '.$field.' FROM `'.$this->table.'` WHERE `'.$column.'` = "'.$what.'"';
+        //echo $query;
+        $result = $this->db->get_row($query, $return_type);
+
+        return $result;
+    }
+
 }

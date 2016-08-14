@@ -15,16 +15,9 @@ abstract class plugme_list_table extends plugme_wp_list_table
     /**
      * Overload those props as you need
      */
-    // protected $data_source            = 'sql';   // sql or raw
-    // protected $data_source_table      = '';      // if data source is sql, we need to specify the table name
-
-
-
-
-    //protected $primary_column         = 'id';    // primary key column name
-    protected $search_column          = 'id';    // column name used for search
-    protected $action_column          = '';      // define wich column will receive action(s) link(s) @see default_action_column()
-    protected $default_orderby_column = 'id';    // default column used for ordering
+    protected $default_orderby_column = '';    // default column used for ordering. if empty, $data_source->table_pk will be used
+    protected $search_column          = '';    // column name used for search. if empty, $data_source->table_pk will be used
+    protected $action_column          = '';    // define wich column will receive action(s) link(s) @see default_action_column()
 
     protected $columns_header         = array(); // table columns header caption
     protected $sortable_columns       = array(); // specify which column can be sorted
@@ -80,6 +73,13 @@ abstract class plugme_list_table extends plugme_wp_list_table
         $this->db = $wpdb;
 
         $this->data_source = $data_source;
+
+        if(empty($this->search_column)) {
+            $this->search_column = $data_source->table_pk;
+        }
+        if(empty($this->default_orderby_column)) {
+            $this->default_orderby_column = $data_source->table_pk;
+        }
                 
         //Set parent defaults
         parent::__construct($this->options);
@@ -100,7 +100,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
                 return $this->default_action_column($item);
                 break;
             default:
-                return $item[$cn]; //Show the whole array for troubleshooting purposes
+                return $item[$cn];
         }
     }
 

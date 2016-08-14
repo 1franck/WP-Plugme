@@ -13,7 +13,7 @@ class example_list_table extends plugme_list_table
      */
     protected $default_orderby_column = 'name';
     protected $search_column          = 'name';
-    protected $action_column          = 'id';
+    protected $action_column          = 'name';
 
     protected $options = array(
         'singular'       => 'Person',
@@ -24,6 +24,7 @@ class example_list_table extends plugme_list_table
     protected $columns_header = array(
         'cb'             => '<input type="checkbox" />', //Render a checkbox instead of text
         'name'           => 'Name',
+        'occupation'     => 'Occupation',
         'gender'         => 'Gender',
         'dateofbirth'    => 'Date of birth',
     );

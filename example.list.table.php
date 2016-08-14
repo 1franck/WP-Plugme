@@ -12,7 +12,7 @@ class example_list_table extends plugme_list_table
      * list table settings
      */
     protected $default_orderby_column = 'name';
-    protected $search_column          = 'id';
+    protected $search_column          = 'name';
     protected $action_column          = 'id';
 
     protected $options = array(
@@ -24,11 +24,14 @@ class example_list_table extends plugme_list_table
     protected $columns_header = array(
         'cb'             => '<input type="checkbox" />', //Render a checkbox instead of text
         'name'           => 'Name',
+        'gender'         => 'Gender',
         'dateofbirth'    => 'Date of birth',
     );
 
     protected $sortable_columns = array(
-        'title' => array('name',false),     //true means it's already sorted
+        'name', 
+        'gender',
+        'dateofbirth'
     );
 
     protected $bulk_actions = array(

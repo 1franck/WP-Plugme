@@ -1,6 +1,6 @@
 <?php 
 
-include_once dirname(__FILE__).'/plugme/plugme.php'; 
+include_once dirname(__FILE__).'/plugme/plugme.admin.php'; 
 include_once dirname(__FILE__).'/example.data.source.php'; 
 include_once dirname(__FILE__).'/example.list.table.php';
 include_once dirname(__FILE__).'/example.form.php'; 
@@ -11,7 +11,7 @@ $list_table  = new example_list_table($data_source);
 $form        = new example_form($data_source);
 
 
-$plugme = plugme::getInstance();
+$plugme = plugme_admin::getInstance();
 $plugme->register_list_table($list_table);
 $plugme->register_form($form);
 
@@ -78,19 +78,45 @@ elseif($plugme->is_creating_item()) {
 
 <div class="wrap">
 
+<?php if($form->has_data() || $form->is_creating_item()) : ?>
 
+    <!-- --------------- FORM ----------------- -->
+    <h1>
+        <?php
+            $item = $list_table->get_option('singular');
+            if($plugme->is_creating_item()) {
+                echo __('New').' '.$item;
+            }
+            else {
+                echo __('Edit').' '.$item .' '.$form->get_data($data_source->table_pk);
+            }
+        ?>
+    </h1>
 
+    <form method="post" enctype="multipart/form-data">
+
+        <?php $form->generate_form(); ?>
+
+    </form>
+
+<?php else : ?>
+
+    <!-- ------------ LIST TABLE -------------- -->
     <h1>
         <?php echo $list_table->get_option('plural'); ?>
-        <a class="page-title-action" href="#"><?php _e('Add'); ?></a>
+        <a class="page-title-action" href="<?php echo $plugme->get_new_item_link(); ?>">
+            <?php _e('Add new'); ?>
+        </a>
     </h1>
 
     <form id="" method="post">
-    <?php
-        $list_table->prepare_items();
-        $list_table->display();
-    ?>
+        <?php
+            $list_table->prepare_items();
+            $list_table->display();
+        ?>
     </form>
+
+<?php endif; ?>
 
 
 </div>

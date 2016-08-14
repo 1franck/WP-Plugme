@@ -27,13 +27,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
         'delete' => true,
     );
 
-    protected $options = array(
-        'singular'         => '',
-        'plural'           => '',
-        'items_per_page'   => 10,
-        'show_search_box'  => true,
-        'show_bulk_action' => true,
-    );
+    protected $options = array(); // options @see $default_options
 
     /**
      * Don't overload those props
@@ -42,6 +36,14 @@ abstract class plugme_list_table extends plugme_wp_list_table
     protected $db;                // link to wordpress $wpdb
     protected $data_source;       // link to a plugme_data_source instance
     protected $data_source_query; // database query generated
+    protected $default_options = array(   // defaults options
+        'singular'         => '',
+        'plural'           => '',
+        'items_per_page'   => 10,
+        'show_search_box'  => true,
+        'show_bulk_action' => true,
+    );
+
 
 
     /**
@@ -80,7 +82,9 @@ abstract class plugme_list_table extends plugme_wp_list_table
         if(empty($this->default_orderby_column)) {
             $this->default_orderby_column = $data_source->table_pk;
         }
-                
+
+        $this->options = array_merge($this->default_options, $this->options);
+
         //Set parent defaults
         parent::__construct($this->options);
 
@@ -283,13 +287,16 @@ abstract class plugme_list_table extends plugme_wp_list_table
         // data from database
         if($this->data_source->type === 'sql') {
             $data = $this->_sql_data_source($current_page);
-            $count_result = $this->db->get_row( 
-                'SELECT count('.$this->data_source->table_pk.') as c FROM `'.$this->data_source_table.'`', 
-                ARRAY_A
-            );
-            if(!empty($count_result)) {
-                $total_items = $count_result['c'];
-            }
+
+            // $count_result = $this->db->get_row( 
+            //     'SELECT count('.$this->data_source->table_pk.') as c FROM `'.$this->data_source_table.'`', 
+            //     ARRAY_A
+            // );
+            // if(!empty($count_result)) {
+            //     $total_items = $count_result['c'];
+            // }
+
+            $total_items = $this->data_source->count();
 
         }
         //date from array and cie

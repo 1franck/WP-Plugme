@@ -50,7 +50,7 @@ class example_form extends plugme_form
         ),
         'biography' => array(
             'type'     => 'texteditor',
-            'label'    => 'Biographie',
+            'label'    => 'Biography',
             'required' => false,
             'description' => 'Example of description for "texteditor" element. (use wp_editor)',
         ),

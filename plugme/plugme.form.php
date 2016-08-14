@@ -123,38 +123,6 @@ abstract class plugme_form
     }
 
     /**
-     * List columns from a table
-     * 
-     * @param  string $table 
-     * @return array     
-     */
-    private function list_column()
-    {
-        $cols = array();
-        foreach ( $this->db->get_col( "DESC " . $this->data_source_table, 0 ) as $cn ) {
-            $cols[] = $cn;
-        }
-        return $cols;
-    }
-
-    /**
-     * Strip unwanted array key based on table column
-     * 
-     * @param  string $table 
-     * @param  array $data  
-     * @return array        
-     */
-    private function strip_unwanted_column($data)
-    {
-        $cols = $this->list_column();
-        $final = array();
-        foreach($data as $k => $v){
-            if(in_array($k, $cols)) $final[$k] = $v;
-        }
-        return $final;
-    }
-
-    /**
      * Check if string is json string
      * 
      * @param  string $string 
@@ -343,7 +311,7 @@ abstract class plugme_form
         if(empty($_POST[$this->data_source->table_pk])) {
             //insert
 
-            $data_to_save = $this->strip_unwanted_column($_POST);
+            $data_to_save = $this->data_source->strip_unwanted_column($_POST);
 
             $data_to_save = $this->pre_save($data_to_save);
 
@@ -355,7 +323,7 @@ abstract class plugme_form
         else {
             //update
             
-            $data_to_save = $this->strip_unwanted_column($_POST);
+            $data_to_save = $this->data_source->strip_unwanted_column($_POST);
 
             $data_to_save = $this->pre_save($data_to_save);
 

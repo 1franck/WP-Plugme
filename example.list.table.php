@@ -18,7 +18,6 @@ class example_list_table extends plugme_list_table
     protected $options = array(
         'singular'       => 'Person',
         'plural'         => 'Persons',
-        'items_per_page' => 10,
     );
 
     protected $columns_header = array(

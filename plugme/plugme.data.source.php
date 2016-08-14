@@ -19,6 +19,7 @@ abstract class plugme_data_source
      * Don't overload those props
      */
     protected $db; //link to $wpdb
+    private $columns = array();
 
     /**
      * Called after class construct
@@ -65,6 +66,55 @@ abstract class plugme_data_source
         $result = $this->db->get_row($query, $return_type);
 
         return $result;
+    }
+
+    /**
+     * Get total table items count
+     * 
+     * @return integer
+     */
+    public function count()
+    {
+        $c = 0;
+
+        $count_result = $this->db->get_row('SELECT count('.$this->table_pk.') as c FROM `'.$this->table.'`', ARRAY_A);
+
+        if(!empty($count_result)) $c = $count_result['c'];
+
+        return $c;
+    }
+
+    /**
+     * List columns from a table
+     * 
+     * @param  string $table 
+     * @return array     
+     */
+    public function list_columns()
+    {
+        if(!empty($this->columns)) {
+            foreach ( $this->db->get_col( "DESC " . $this->table, 0 ) as $cn ) {
+                $this->columns[] = $cn;
+            }
+        }
+        return $this->columns;
+    }
+
+    /**
+     * Strip unwanted array key based on table column
+     * 
+     * @param  string $table 
+     * @param  array $data  
+     * @return array        
+     */
+    public function strip_unwanted_column($data)
+    {
+        $cols = $this->list_columns();
+        $final = array();
+        foreach($data as $k => $v){
+            if(in_array($k, $cols)) $final[$k] = $v;
+        }
+        return $final;
     }
 
 }

@@ -35,9 +35,11 @@ abstract class plugme_list_table extends plugme_wp_list_table
     );
 
     protected $options = array(
-        'singular'       => '',
-        'plural'         => '',
-        'items_per_page' => 10
+        'singular'         => '',
+        'plural'           => '',
+        'items_per_page'   => 10,
+        'show_search_box'  => true,
+        'show_bulk_action' => true,
     );
 
     /**
@@ -191,13 +193,32 @@ abstract class plugme_list_table extends plugme_wp_list_table
      */
     public function get_sortable_columns() 
     {
-        //example
+        $final = array();
+
+        // new example:
         // $sortable_columns = array(
-        //     'nom'     => array('nom',false),     //true means it's already sorted
-        //     'adresse'    => array('adresse',false),
-        //     //'telephone'  => array('telelphone',false)
+        //     'name',     
+        //     'address',
         // );
-        return $this->sortable_columns;
+
+        if(!empty($this->sortable_columns)) {
+            foreach($this->sortable_columns as $k => $v) {
+                $def_sort = ($v === $this->default_orderby_column) ? true : false;
+                $final[$v] = array($v, $def_sort);
+            }
+        }
+
+        // $final =  $this->sortable_columns
+        //
+        // old example:
+        // (first param = url $_GET name)
+        // (second param = boolean: true means it's already sorted)
+        // 
+        // $sortable_columns = array(
+        //     'name'     => array('name',true),     
+        //     'address'  => array('adress',false),
+        // );
+        return $final;
     }
 
     /**

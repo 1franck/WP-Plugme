@@ -1175,11 +1175,11 @@ class plugme_wp_list_table {
         }
         ?>
     <?php if($which === 'top') : ?>
-    <div class="searchform">
+    <p class="search-box">
         <input name="lookfor" type="text" placeholder="<?php _e('Search'); ?>..." value="<?php if(!empty($_REQUEST['lookfor'])) echo htmlentities($_REQUEST['lookfor']); ?>">
         <button name="search" class="button action" type="submit"><span class="dashicons dashicons-search" style="line-height:30px;font-size: 24px;width:auto;"></span></button>
-    </div>
-    <hr class="clear">
+    </p>
+    <!-- <hr class="clear"> -->
     <?php endif; ?>
     <div class="tablenav <?php echo esc_attr( $which ); ?>">
 

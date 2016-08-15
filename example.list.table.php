@@ -38,8 +38,6 @@ class example_list_table extends plugme_list_table
 
     protected $bulk_actions = array(
         'delete'    => 'Delete',
-        // 'publish'   => 'Publier',
-        // 'unpublish' => 'Dépublier',
     );
 
     /**

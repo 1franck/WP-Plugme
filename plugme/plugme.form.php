@@ -4,6 +4,18 @@
  *
  * @author  Francois Lajoie
  */
+
+include 'plugme.form.control.php';
+
+/**
+ * Include form controls components
+ */
+foreach(new DirectoryIterator(dirname(__FILE__).'/form') as $f) {
+    if (in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), array('php'))) {
+        include 'form/'.$f;
+    }
+}
+
 abstract class plugme_form
 {
     /**
@@ -126,18 +138,6 @@ abstract class plugme_form
     }
 
     /**
-     * Check if string is json string
-     * 
-     * @param  string $string 
-     * @return boolean         
-     */
-    private function is_json($string) 
-    {
-        json_decode($string);
-        return (json_last_error() == JSON_ERROR_NONE);
-    }
-
-    /**
      * Load an item from the database base on $primary_column
      * 
      * @param mixed $id
@@ -240,23 +240,25 @@ abstract class plugme_form
 
                 if(empty($first_field)) $first_field = $k;
 
-                //merge options
-                $v = $this->merge_control_options($k, $v);
-
                 if(!array_key_exists('type', $v)) $v['type'] = 'text';
-                $method = 'form_'.$v['type'];
 
-                $component = $this->$method($k, $this->get_data($k), $v);
+                $control_cn = 'plugme_form_control_'.$v['type'];
+                if(!class_exists($control_cn, false)) {
+                    continue;
+                    //wp_die(__CLASS__.': control type "'.$v['type'].'" not found');
+                }
 
-                $description = (array_key_exists('description', $v)) ? $v['description'] : '';
+                $control = new $control_cn($k, $this->get_data($k), $v);
 
-                if($v['type'] != 'switch') $description = '<br>'.$description;
-
+                $component = $control->generate();
+                $label     = $control->get_option('label');
+                $desc      = $control->get_option('description');
+ 
                 echo '<tr>
                         <th scope="row">
-                            <label for="field-'.$k.'">'.__($v['label']).'</label>
+                            <label for="field-'.$k.'">'.__($label).'</label>
                         </th>
-                        <td>'.$component.'<small>'.$description.'</small></td>
+                        <td>'.$component.'<small>'.__($desc).'</small></td>
                     </tr>'; 
             }
 
@@ -354,45 +356,11 @@ abstract class plugme_form
     }
 
     /**
-     * Text control (input)
-     */
-    public function form_text($name, $data, $options = null)
-    {
-        $attrs = $this->attributes(array(
-            'id'       => 'field-'.$name,
-            'name'     => $name,
-            'value'    => $data,
-            'required' => $options['required'],
-        ));
-
-        return '<input required class="regular-text" type="text" '.$attrs.'>';
-    }
-
-    /**
      * Textarea control
      */
     public function form_textarea($name, $data, $options = null)
     {
         return '<textarea id="field-'.$name.'" name="'.$name.'" class="large-text" rows="3">'.$data.'</textarea>';
-    }
-
-    /**
-     * Text editor (use wp_editor)
-     */
-    public function form_texteditor($name, $data, $options = null)
-    {
-        $settings = array(
-            'teeny' => true,
-            'textarea_rows' => 8,
-            'tabindex' => 1,
-            'media_buttons' => false
-        );
-        ob_start();
-        wp_editor(stripslashes($data), $name, $settings);
-        $wp_editor = ob_get_contents();
-        ob_end_clean();
-
-        return $wp_editor;
     }
 
     /**
@@ -403,110 +371,6 @@ abstract class plugme_form
         return '<input id="field-'.$name.'" type="checkbox" value="1" '.(($data === 1) ? 'checked' : '').' name="'.$name.'">';;
     }
 
-    /**
-     * Switch control (use checkbox and onoffswitch.css)
-     */
-    public function form_switch($name, $data, $options = null)
-    {
-        return '
-            <div class="onoffswitch">
-                <input type="checkbox" name="'.$name.'" class="onoffswitch-checkbox" id="field-'.$name.'" value="1" '.(($data == 1) ? 'checked' : '').'>
-                <label class="onoffswitch-label" for="field-'.$name.'"></label>
-            </div>';
-    }
-
-    /**
-     * Select control
-     */
-    public function form_select($name, $data, $options = null)
-    {
-        $control = '<select id="field-'.$name.'" name="'.$name.'">';
-        if(array_key_exists('options', $options) && !empty($options['options'])) {
-            foreach($options['options'] as $k => $v) {
-                $control .= '<option '.(($k == $data) ? 'selected' : '').' value="'.$k.'">'.$v.'</option>';
-            }
-        }
-        
-        $control .= '</select>';
-
-        return $control;
-    }
-
-    /**
-     * Image uploading/selecting (use wp_media)
-     */
-    public function form_image($name, $data, $options = null)
-    {
-        if(empty($data)) $no_image = true;
-
-        $id_name = 'field-'.$name;
-        $image_url = site_url().'/'.$data;
-        $control = '
-            <input type="text" id="'.$id_name.'" name="'.$name.'" class="regular-text" value="'.$data.'">
-            <input type="button" name="upload-btn" id="upload-btn-'.$id_name.'" class="button-secondary" value="'.__('Upload image').'">';
-
-        if(!isset($no_image)) {
-            $control .= '<br><img id="image-'.$id_name.'" src="'.$image_url .'" width="300px">';
-        }
-        else {
-            $control .= '<br><img id="image-'.$id_name.'" src="'.$image_url .'" width="0px">';
-        }         
-
-        $control .= '
-            <script type="text/javascript">
-                jQuery(document).ready(function($){
-                    $("#upload-btn-'.$id_name.'").click(function(e) {
-                        e.preventDefault();
-                        var image = wp.media({ 
-                            title: "'.__('Upload image').'",
-                            // mutiple: true if you want to upload multiple files at once
-                            multiple: false
-                        }).open()
-                        .on("select", function(e){
-                            // This will return the selected image from the Media Uploader, the result is an object
-                            var uploaded_image = image.state().get("selection").first();
-                            var site_url = "'.site_url().'";
-                            // We convert uploaded_image to a JSON object to make accessing it easier
-                            // Output to the console uploaded_image
-                            console.log(uploaded_image);
-                            var image_url = uploaded_image.toJSON().url;
-                            console.log(image_url);
-                            var real_image_url = image_url.replace("images/", "'.site_url().'/wp-content/uploads/");
-                            // Let"s assign the url value to the input field
-                            $("#'.$id_name.'").val(image_url.replace("'.site_url().'", ""));
-                            $("#image-'.$id_name.'").attr({
-                                "src" : real_image_url,
-                                "width" : "300px"
-                            });
-                        });
-                    });
-                });
-            </script>';    
-
-        wp_enqueue_media();
-        return $control;
-    }
-
-    /**
-     * Datepicker
-     *
-     * @uses  jquery-ui
-     */
-    public function form_datepicker($name, $data, $options = null)
-    {
-        $id_name = 'field-'.$name;
-        $format = (array_key_exists('format', $options)) ? $options['format'] : 'yy-mm-dd';
-        $control = '
-            <input type="date" id="'.$id_name.'" name="'.$name.'" value="'.$data.'" />
-            <span class="dashicons dashicons-calendar-alt" style="margin-left:-30px;margin-top:5px;pointer-events: none;"></span>
-            <script>
-                jQuery(document).ready(function(){
-                    jQuery("#'.$id_name.'").datepicker({ dateFormat: "'.$format.'" }); 
-                });
-            </script>';
-
-        return $control;
-    }
 
     /**
      * Slider
@@ -528,104 +392,6 @@ abstract class plugme_form
 
         return $control;
     }
-
-    /**
-     * Chosen
-     *
-     * @uses  jquery chosen
-     */
-    public function form_chosen($name, $data, $options = array())
-    {
-        $id_name = 'field-'.$name;
-
-        $is_multiple = false;
-        if(array_key_exists('multiple', $options) && $options['multiple']) $is_multiple = true;
-
-        $placeholder = '';
-        if(array_key_exists('placeholder', $options)) $placeholder = $options['placeholder']; 
-
-        if($this->is_json($data)) {
-            $data = json_decode($data);
-        }
-
-        if(!array_key_exists('options', $options) || empty($options['options'])) {
-            $options['options'] = array();
-        }
-            
-
-        $control = '<select '.(($is_multiple) ? 'multiple' : '').' data-placeholder="'.$placeholder.'" id="'.$id_name.'" name="'.$name.''.(($is_multiple) ? '[]' : '').'" class="chosen-select">';
-        foreach($options['options'] as $k => $v) {
-            $selected = '';
-            if(is_array($data) && in_array($k, $data)) {
-                $selected = 'selected';
-            }
-            elseif($k == $data) $selected = 'selected';
-
-            $control .= '<option '.$selected.' value="'.$k.'">'.$v.'</option>';
-        }
-        $control .= '</select>';
-
-        $control .= '
-            <script>
-                jQuery(document).ready(function(){
-                    jQuery("#'.$id_name.'").chosen({});
-                });
-            </script>';
-
-        return $control;
-    }
-
-    /**
-     * Generate html attributes from an array associativate
-     * 
-     * @param  array  $attrs
-     * @return string
-     */
-    private function attributes($attrs = array()) 
-    {
-        $attrs_array = array();
-        if(!empty($attrs)) {
-            foreach($attrs as $k => $v) {
-                if(is_bool($v)) {
-                    if($v === true) $attrs_array[] = $k;
-                }
-                else $attrs_array[] = $k.'="'.$v.'"';
-            }
-        }
-        return implode(' ', $attrs_array);
-    }
-
-    /**
-     * Default control options
-     * 
-     * @param  string $type 
-     * @return array      
-     */
-    private function default_control_options($type)
-    {
-        switch($type) {
-            default: return array(
-                'required'    => false,
-                'description' => '',
-            );
-        }
-    }
-
-    /**
-     * Merge default options with user control options array
-     * 
-     * @param  string $name    
-     * @param  array  $options 
-     * @return array          
-     */
-    private function merge_control_options($name, $options)
-    {
-        if(!array_key_exists('type', $options)) {
-            wp_die(__CLASS__.': missing a control type for '.htmlentities($name));
-        }
-        return array_merge($this->default_control_options($options['type']), $options);
-    }
-
 
     /**
      * Return country list array for select control

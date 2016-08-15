@@ -26,6 +26,8 @@ class example_list_table extends plugme_list_table
         'occupation'     => 'Occupation',
         'gender'         => 'Gender',
         'dateofbirth'    => 'Date of birth',
+        'email'          => 'Email',
+        'image'          => 'Profile image',
     );
 
     protected $sortable_columns = array(
@@ -57,9 +59,14 @@ class example_list_table extends plugme_list_table
         wp_die('Items deleted (or they would be if we had items to delete)!');
     }
 
-    public function column_profile_image($item)
+    public function column_image($item)
     {
-        return '<img width="75px" src="'.site_url().'/'.$item['profile_image'].'" />';
+        return '<img width="75px" src="'.site_url().'/'.$item['image'].'" />';
+    }
+
+    public function column_email($item)
+    {
+        return '<a href="mailto:'.$item['email'].'">'.$item['email'].'</a>';
     }
 
 }

@@ -12,8 +12,8 @@ class example_form extends plugme_form
         'name' => array(
             'type'     => 'text',
             'label'    => 'Full name',
-            'required' => true,
-            'description' => 'Example of description for "text" input element.',
+            // 'required' => true,
+            // 'description' => 'Example of description for "text" input element.',
         ),
         'enabled' => array(
             'type'     => 'switch',
@@ -78,7 +78,7 @@ class example_form extends plugme_form
     public function init()
     {
        
-        $this->form_fields['country']['options'] = $this->get_country_list();
+        $this->form_fields['country']['options'] = $this->get_countries_list();
             
     }
 

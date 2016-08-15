@@ -47,7 +47,6 @@ abstract class plugme_form
     protected $assets_url;           // plugme assets url
     protected $has_errors = false;   // form has error @see
 
-
     /**
      * Set the list data. Should return an array
      */
@@ -112,6 +111,10 @@ abstract class plugme_form
         //on/off switch
         wp_register_style("plugme-onoffswitch", $this->assets_url.'/onoffswitch.css');
         wp_enqueue_style( 'plugme-onoffswitch', time(), true);
+
+        //parsley (http://parsleyjs.org)
+        wp_register_script("plugme-parsley", $this->assets_url.'/parsley.min.js');
+        wp_enqueue_script('plugme-parsley', time(), true);
     }
 
     /**
@@ -213,18 +216,21 @@ abstract class plugme_form
 
     /**
      * Generate the form
+     * 
+     * @param string $form_id_name
      */
-    public function generate_form()
+    public function generate_form($form_id_name = null)
     {
         if(!empty($this->form_fields)) {
 
             $first_field = '';
+            $save_btn = ($this->new_item) ? __('Save') : __('Save changes');
 
             // form buttons
             echo '
                 <div class="alignright">
                     <a href="?page='.$_REQUEST['page'].'" class="button">'.__('Cancel').'</a> &nbsp;
-                    <input type="submit" value="'.__('Save').'" class="button button-primary" id="submit" name="submit">
+                    <input type="submit" value="'.$save_btn.'" class="button button-primary" id="submit" name="submit">
                 </div><br><br>
                 <hr class="clear">';
 
@@ -233,6 +239,9 @@ abstract class plugme_form
             foreach($this->form_fields as $k => $v) {
 
                 if(empty($first_field)) $first_field = $k;
+
+                //merge options
+                $v = $this->merge_control_options($k, $v);
 
                 if(!array_key_exists('type', $v)) $v['type'] = 'text';
                 $method = 'form_'.$v['type'];
@@ -259,19 +268,21 @@ abstract class plugme_form
             }
 
             // form buttons
+            
             echo '
                 <hr>
-                <div class="alignright">
+                <div class="alignleft">
                     <a href="?page='.$_REQUEST['page'].'" class="button">'.__('Cancel').'</a> &nbsp;
-                    <input type="submit" value="'.__('Save').'" class="button button-primary" id="submit" name="submit">
+                    <input type="submit" value="'.$save_btn.'" class="button button-primary" id="submit" name="submit">
                 </div>';
 
 
-            // script (auto focus)
+            // script (auto focus & parsley validation)
             echo '
                 <script>
                 jQuery(function() {
                     jQuery("#field-'.$first_field.'").focus();
+                    jQuery("#'.$form_id_name.'").parsley();
                 });
                 </script>
             ';
@@ -347,7 +358,14 @@ abstract class plugme_form
      */
     public function form_text($name, $data, $options = null)
     {
-        return '<input id="field-'.$name.'" class="regular-text" type="text" value="'.$data.'" name="'.$name.'">';
+        $attrs = $this->attributes(array(
+            'id'       => 'field-'.$name,
+            'name'     => $name,
+            'value'    => $data,
+            'required' => $options['required'],
+        ));
+
+        return '<input required class="regular-text" type="text" '.$attrs.'>';
     }
 
     /**
@@ -556,258 +574,68 @@ abstract class plugme_form
 
         return $control;
     }
-    
-    public function get_country_list()
+
+    /**
+     * Generate html attributes from an array associativate
+     * 
+     * @param  array  $attrs
+     * @return string
+     */
+    private function attributes($attrs = array()) 
     {
-        return array(
-            'AF' => "Afghanistan",
-            'AL' => "Albania",
-            'DZ' => "Algeria",
-            'AS' => "American Samoa",
-            'AD' => "Andorra",
-            'AG' => "Angola",
-            'AI' => "Anguilla",
-            'AG' => "Antigua &amp; Barbuda",
-            'AR' => "Argentina",
-            'AA' => "Armenia",
-            'AW' => "Aruba",
-            'AU' => "Australia",
-            'AT' => "Austria",
-            'AZ' => "Azerbaijan",
-            'BS' => "Bahamas",
-            'BH' => "Bahrain",
-            'BD' => "Bangladesh",
-            'BB' => "Barbados",
-            'BY' => "Belarus",
-            'BE' => "Belgium",
-            'BZ' => "Belize",
-            'BJ' => "Benin",
-            'BM' => "Bermuda",
-            'BT' => "Bhutan",
-            'BO' => "Bolivia",
-            'BL' => "Bonaire",
-            'BA' => "Bosnia &amp; Herzegovina",
-            'BW' => "Botswana",
-            'BR' => "Brazil",
-            'BC' => "British Indian Ocean Ter",
-            'BN' => "Brunei",
-            'BG' => "Bulgaria",
-            'BF' => "Burkina Faso",
-            'BI' => "Burundi",
-            'KH' => "Cambodia",
-            'CM' => "Cameroon",
-            'CA' => "Canada",
-            'IC' => "Canary Islands",
-            'CV' => "Cape Verde",
-            'KY' => "Cayman Islands",
-            'CF' => "Central African Republic",
-            'TD' => "Chad",
-            'CD' => "Channel Islands",
-            'CL' => "Chile",
-            'CN' => "China",
-            'CI' => "Christmas Island",
-            'CS' => "Cocos Island",
-            'CO' => "Colombia",
-            'CC' => "Comoros",
-            'CG' => "Congo",
-            'CK' => "Cook Islands",
-            'CR' => "Costa Rica",
-            'CT' => "Cote D'Ivoire",
-            'HR' => "Croatia",
-            'CU' => "Cuba",
-            'CB' => "Curacao",
-            'CY' => "Cyprus",
-            'CZ' => "Czech Republic",
-            'DK' => "Denmark",
-            'DJ' => "Djibouti",
-            'DM' => "Dominica",
-            'DO' => "Dominican Republic",
-            'TM' => "East Timor",
-            'EC' => "Ecuador",
-            'EG' => "Egypt",
-            'SV' => "El Salvador",
-            'GQ' => "Equatorial Guinea",
-            'ER' => "Eritrea",
-            'EE' => "Estonia",
-            'ET' => "Ethiopia",
-            'FA' => "Falkland Islands",
-            'FO' => "Faroe Islands",
-            'FJ' => "Fiji",
-            'FI' => "Finland",
-            'FR' => "France",
-            'GF' => "French Guiana",
-            'PF' => "French Polynesia",
-            'FS' => "French Southern Ter",
-            'GA' => "Gabon",
-            'GM' => "Gambia",
-            'GE' => "Georgia",
-            'DE' => "Germany",
-            'GH' => "Ghana",
-            'GI' => "Gibraltar",
-            'GB' => "Great Britain",
-            'GR' => "Greece",
-            'GL' => "Greenland",
-            'GD' => "Grenada",
-            'GP' => "Guadeloupe",
-            'GU' => "Guam",
-            'GT' => "Guatemala",
-            'GN' => "Guinea",
-            'GY' => "Guyana",
-            'HT' => "Haiti",
-            'HW' => "Hawaii",
-            'HN' => "Honduras",
-            'HK' => "Hong Kong",
-            'HU' => "Hungary",
-            'IS' => "Iceland",
-            'IN' => "India",
-            'ID' => "Indonesia",
-            'IA' => "Iran",
-            'IQ' => "Iraq",
-            'IR' => "Ireland",
-            'IM' => "Isle of Man",
-            'IL' => "Israel",
-            'IT' => "Italy",
-            'JM' => "Jamaica",
-            'JP' => "Japan",
-            'JO' => "Jordan",
-            'KZ' => "Kazakhstan",
-            'KE' => "Kenya",
-            'KI' => "Kiribati",
-            'NK' => "Korea North",
-            'KS' => "Korea South",
-            'KW' => "Kuwait",
-            'KG' => "Kyrgyzstan",
-            'LA' => "Laos",
-            'LV' => "Latvia",
-            'LB' => "Lebanon",
-            'LS' => "Lesotho",
-            'LR' => "Liberia",
-            'LY' => "Libya",
-            'LI' => "Liechtenstein",
-            'LT' => "Lithuania",
-            'LU' => "Luxembourg",
-            'MO' => "Macau",
-            'MK' => "Macedonia",
-            'MG' => "Madagascar",
-            'MY' => "Malaysia",
-            'MW' => "Malawi",
-            'MV' => "Maldives",
-            'ML' => "Mali",
-            'MT' => "Malta",
-            'MH' => "Marshall Islands",
-            'MQ' => "Martinique",
-            'MR' => "Mauritania",
-            'MU' => "Mauritius",
-            'ME' => "Mayotte",
-            'MX' => "Mexico",
-            'MI' => "Midway Islands",
-            'MD' => "Moldova",
-            'MC' => "Monaco",
-            'MN' => "Mongolia",
-            'MS' => "Montserrat",
-            'MA' => "Morocco",
-            'MZ' => "Mozambique",
-            'MM' => "Myanmar",
-            'NA' => "Nambia",
-            'NU' => "Nauru",
-            'NP' => "Nepal",
-            'AN' => "Netherland Antilles",
-            'NL' => "Netherlands (Holland, Europe)",
-            'NV' => "Nevis",
-            'NC' => "New Caledonia",
-            'NZ' => "New Zealand",
-            'NI' => "Nicaragua",
-            'NE' => "Niger",
-            'NG' => "Nigeria",
-            'NW' => "Niue",
-            'NF' => "Norfolk Island",
-            'NO' => "Norway",
-            'OM' => "Oman",
-            'PK' => "Pakistan",
-            'PW' => "Palau Island",
-            'PS' => "Palestine",
-            'PA' => "Panama",
-            'PG' => "Papua New Guinea",
-            'PY' => "Paraguay",
-            'PE' => "Peru",
-            'PH' => "Philippines",
-            'PO' => "Pitcairn Island",
-            'PL' => "Poland",
-            'PT' => "Portugal",
-            'PR' => "Puerto Rico",
-            'QA' => "Qatar",
-            'ME' => "Republic of Montenegro",
-            'RS' => "Republic of Serbia",
-            'RE' => "Reunion",
-            'RO' => "Romania",
-            'RU' => "Russia",
-            'RW' => "Rwanda",
-            'NT' => "St Barthelemy",
-            'EU' => "St Eustatius",
-            'HE' => "St Helena",
-            'KN' => "St Kitts-Nevis",
-            'LC' => "St Lucia",
-            'MB' => "St Maarten",
-            'PM' => "St Pierre &amp; Miquelon",
-            'VC' => "St Vincent &amp; Grenadines",
-            'SP' => "Saipan",
-            'SO' => "Samoa",
-            'AS' => "Samoa American",
-            'SM' => "San Marino",
-            'ST' => "Sao Tome &amp; Principe",
-            'SA' => "Saudi Arabia",
-            'SN' => "Senegal",
-            'RS' => "Serbia",
-            'SC' => "Seychelles",
-            'SL' => "Sierra Leone",
-            'SG' => "Singapore",
-            'SK' => "Slovakia",
-            'SI' => "Slovenia",
-            'SB' => "Solomon Islands",
-            'OI' => "Somalia",
-            'ZA' => "South Africa",
-            'ES' => "Spain",
-            'LK' => "Sri Lanka",
-            'SD' => "Sudan",
-            'SR' => "Suriname",
-            'SZ' => "Swaziland",
-            'SE' => "Sweden",
-            'CH' => "Switzerland",
-            'SY' => "Syria",
-            'TA' => "Tahiti",
-            'TW' => "Taiwan",
-            'TJ' => "Tajikistan",
-            'TZ' => "Tanzania",
-            'TH' => "Thailand",
-            'TG' => "Togo",
-            'TK' => "Tokelau",
-            'TO' => "Tonga",
-            'TT' => "Trinidad &amp; Tobago",
-            'TN' => "Tunisia",
-            'TR' => "Turkey",
-            'TU' => "Turkmenistan",
-            'TC' => "Turks &amp; Caicos Is",
-            'TV' => "Tuvalu",
-            'UG' => "Uganda",
-            'UA' => "Ukraine",
-            'AE' => "United Arab Emirates",
-            'GB' => "United Kingdom",
-            'US' => "United States of America",
-            'UY' => "Uruguay",
-            'UZ' => "Uzbekistan",
-            'VU' => "Vanuatu",
-            'VS' => "Vatican City State",
-            'VE' => "Venezuela",
-            'VN' => "Vietnam",
-            'VB' => "Virgin Islands (Brit)",
-            'VA' => "Virgin Islands (USA)",
-            'WK' => "Wake Island",
-            'WF' => "Wallis &amp; Futana Is",
-            'YE' => "Yemen",
-            'ZR' => "Zaire",
-            'ZM' => "Zambia",
-            'ZW' => "Zimbabwe",
-        );
+        $attrs_array = array();
+        if(!empty($attrs)) {
+            foreach($attrs as $k => $v) {
+                if(is_bool($v)) {
+                    if($v === true) $attrs_array[] = $k;
+                }
+                else $attrs_array[] = $k.'="'.$v.'"';
+            }
+        }
+        return implode(' ', $attrs_array);
+    }
+
+    /**
+     * Default control options
+     * 
+     * @param  string $type 
+     * @return array      
+     */
+    private function default_control_options($type)
+    {
+        switch($type) {
+            default: return array(
+                'required'    => false,
+                'description' => '',
+            );
+        }
+    }
+
+    /**
+     * Merge default options with user control options array
+     * 
+     * @param  string $name    
+     * @param  array  $options 
+     * @return array          
+     */
+    private function merge_control_options($name, $options)
+    {
+        if(!array_key_exists('type', $options)) {
+            wp_die(__CLASS__.': missing a control type for '.htmlentities($name));
+        }
+        return array_merge($this->default_control_options($options['type']), $options);
+    }
+
+
+    /**
+     * Return country list array for select control
+     * @see  data/countries.php
+     * 
+     * @return array
+     */
+    public function get_countries_list()
+    {
+        return include 'data/countries.php';
     }
 
 }

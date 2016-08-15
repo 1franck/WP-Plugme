@@ -10,56 +10,77 @@ class example_form extends plugme_form
     protected $form_fields = array(
 
         'name' => array(
-            'type'     => 'text',
-            'label'    => 'Full name',
-            // 'required' => true,
-            // 'description' => 'Example of description for "text" input element.',
+            'type'        => 'text',
+            'label'       => 'Full name',
+            'description' => 'Example of description for "text" input element.',
+            'attrs'       => array(
+                'required'    => true,
+                'placeholder' => 'Full name',
+            ),
         ),
+
         'enabled' => array(
-            'type'     => 'switch',
-            'label'    => 'Enabled',
-            'required' => false,
+            'type'        => 'switch',
+            'label'       => 'Enabled',
+            'checkbox_label' => 'This is the checkbox label text, yeah, for real!',
             'description' => 'Example of description for "switch" element (css checkbox).',
         ),
+
+        'enabled2' => array(
+            'type'        => 'checkbox',
+            'label'       => 'Enabled',
+            'checkbox_label' => 'This is the checkbox label text, yeah, for real!',
+            'description' => 'Example of description for "switch" element (css checkbox).',
+        ),
+
+        
+
         'gender' => array(
-            'type'     => 'select',
-            'label'    => 'Gender',
-            'required' => false,
-            'options'  => array(
+            'type'        => 'select',
+            'label'       => 'Gender',
+            'description' => 'Example of description for "select" element.',
+            'attrs'       => array(
+                'multiple' => false
+            ),
+            'options'     => array(
                 'male'    => 'Male',
                 'female'  => 'Female',
                 'other'   => 'Other',
                 'unknown' => 'Unknown'
             ),
-            'description' => 'Example of description for "select" element.',
         ),
+
         'dateofbirth' => array(
-            'type'     => 'datepicker',
-            'label'    => 'Date of birth',
-            'required' => false,
-            'default'  => '',
+            'type'        => 'datepicker',
+            'label'       => 'Date of birth',
+            'default'     => '',
             'description' => 'Example of description for "datepicker" element. (use jquery ui)'
         ),
+
         'country' => array(
-            'type'     => 'chosen',
-            'label'    => 'Country',
-            'required' => false,
-            'default'  => 'US', //@see init()
-            'multiple' => false,
+            'type'        => 'chosen',
+            'label'       => 'Country',
+            'default'     => 'US', //@see init()
             'description' => 'Example of description for "chosen" element. (use chosen js)',
+            'attrs'       => array(
+                'multiple' => false,
+                'required' => false,
+            ),
         ),
+
         'bio' => array(
-            'type'     => 'texteditor',
-            'label'    => 'Biography',
-            'required' => false,
+            'type'        => 'texteditor',
+            'label'       => 'Biography',
             'description' => 'Example of description for "texteditor" element. (use wp_editor)',
         ),
+
         'image' => array(
             'type'     => 'image',
             'label'    => 'Profile image',
             'required' => false,
             'description' => 'Example of description for "image" element. (use wp_media)',
         ),
+
         'occupation' => array(
             'type'     => 'textarea',
             'label'    => 'Occupation',

@@ -1,6 +1,8 @@
 .onoffswitch {
     position: relative; width: 69px;
     -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+    display:inline-block;
+    vertical-align: middle;
 }
 .onoffswitch-checkbox {
     display: none !important;

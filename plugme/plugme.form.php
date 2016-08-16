@@ -108,21 +108,9 @@ abstract class plugme_form
      */
     private function register_assets()
     {
-        //jquery ui
-        wp_register_script("plugme-jquery-ui", $this->assets_url.'/jquery-ui.min.js');
+        //jquery ui style
         wp_register_style("plugme-jquery-ui", $this->assets_url.'/jquery-ui.css');
-        wp_enqueue_script('plugme-jquery-ui', time(), true);
         wp_enqueue_style( 'plugme-jquery-ui', time(), true);
-
-        //chosen jquery (https://github.com/harvesthq/chosen)
-        wp_register_script("plugme-chosen", $this->assets_url.'/chosen/chosen.jquery.min.js');
-        wp_register_style("plugme-chosen", $this->assets_url.'/chosen/chosen.min.css');
-        wp_enqueue_script('plugme-chosen', time(), true);
-        wp_enqueue_style( 'plugme-chosen', time(), true);
-
-        //on/off switch
-        wp_register_style("plugme-onoffswitch", $this->assets_url.'/onoffswitch.css');
-        wp_enqueue_style( 'plugme-onoffswitch', time(), true);
 
         //parsley (http://parsleyjs.org)
         wp_register_script("plugme-parsley", $this->assets_url.'/parsley.min.js');

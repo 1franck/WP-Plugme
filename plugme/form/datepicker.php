@@ -19,6 +19,19 @@ class plugme_form_control_datepicker extends plugme_form_control
     );
 
     /**
+     * Init jquery ui
+     */
+    public function init()
+    {
+        if(!wp_script_is( 'jquery-ui-core', 'enqueued' )) {
+            wp_enqueue_script('jquery-ui-core', time(), true);
+        }
+        if(!wp_script_is( 'jquery-ui-datepicker', 'enqueued' )) {
+            wp_enqueue_script('jquery-ui-datepicker', time(), true);
+        }
+    }
+
+    /**
      * Generated the control
      * 
      * @return string

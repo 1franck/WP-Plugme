@@ -19,6 +19,17 @@ class plugme_form_control_switch extends plugme_form_control
     );
 
     /**
+     * Init css switch
+     */
+    public function init()
+    {
+        if(!wp_style_is( 'plugme-onoffswitch', 'enqueued' )) {
+            wp_register_style("plugme-onoffswitch", $this->assets_url.'/onoffswitch.css');
+            wp_enqueue_style( 'plugme-onoffswitch', time(), true);
+        }
+    }
+
+    /**
      * Generated the control
      * 
      * @return string

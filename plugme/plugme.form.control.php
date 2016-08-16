@@ -26,7 +26,17 @@ abstract class plugme_form_control
     protected $assets_url;
     protected $attrs_array = array();
     
+    /**
+     * Define this method
+     * 
+     * @return string
+     */
     abstract public function generate();
+
+    /**
+     * Optionnal
+     */
+    public function init() {}
 
     /**
      * Contructor
@@ -52,8 +62,9 @@ abstract class plugme_form_control
 
         $this->data = $data;
 
-        $this->assets_url = plugins_url(basename(realpath(dirname(__FILE__).'/../../')).'/plugme/assets');
+        $this->assets_url = plugins_url(basename(realpath(dirname(__FILE__).'/../')).'/plugme/assets');
 
+        $this->init();
         // echo '<pre>';
         // print_r($this->options);
 

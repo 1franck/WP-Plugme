@@ -20,6 +20,19 @@ class plugme_form_control_chosen extends plugme_form_control
     );
 
     /**
+     * Init jquery chosen
+     */
+    public function init()
+    {
+        if(!wp_script_is( 'plugme-chosen', 'enqueued' )) {
+            wp_register_script("plugme-chosen", $this->assets_url.'/chosen/chosen.jquery.min.js');
+            wp_register_style("plugme-chosen", $this->assets_url.'/chosen/chosen.min.css');
+            wp_enqueue_script('plugme-chosen', time(), true);
+            wp_enqueue_style( 'plugme-chosen', time(), true);
+        }
+    }
+
+    /**
      * Generated the control
      * 
      * @return string

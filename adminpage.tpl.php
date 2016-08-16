@@ -29,7 +29,13 @@ elseif($plugme->is_creating_item()) {
     $form->create_new_item();
 }
 
-
+/**
+ * Form submitted
+ */
+if($plugme->is_form_submitted()) {
+    echo '<pre>';
+    print_r($_POST);
+}
 
 
 // include_once dirname(__FILE__).'/../plugme/plugme.php'; 

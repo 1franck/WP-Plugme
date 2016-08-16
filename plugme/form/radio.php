@@ -12,6 +12,7 @@ class plugme_form_control_radio extends plugme_form_control
     protected $default_options = array(
         'description' => '', 
         'options'     => array(),
+        'inline'      => false,
         'attrs'       => array(
             'required'    => false,
         ),
@@ -40,6 +41,8 @@ class plugme_form_control_radio extends plugme_form_control
                         <input type="radio" '.(($k == $this->data) ? 'checked' : '').' value="'.$k.'" name="'.$this->name.'">
                         <span>'.$v.'</span>
                     </label>';
+
+                if(!$this->options['inline']) $control .= '<br>';
             }
         }
         

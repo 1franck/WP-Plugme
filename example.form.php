@@ -94,6 +94,18 @@ class example_form extends plugme_form
             'description' => 'Example of description for "slider" element. (use jquery ui)',
            
         ),
+
+        'role' => array(
+            'type'        => 'radio',
+            'options'     => array(
+                'admin'  => 'Administrator',
+                'member' => 'Member',
+                'vip'    => 'V.I.P'
+            ),
+            'label'       => 'Role',
+            'description' => 'Example of description for "radio" element.',
+           
+        ),
     );
 
     public function init()

@@ -26,14 +26,12 @@ class example_form extends plugme_form
             'description' => 'Example of description for "switch" element (css checkbox).',
         ),
 
-        'enabled2' => array(
+        'featured' => array(
             'type'        => 'checkbox',
-            'label'       => 'Enabled',
+            'label'       => 'Featured',
             'checkbox_label' => 'This is the checkbox label text, yeah, for real!',
-            'description' => 'Example of description for "switch" element (css checkbox).',
+            'description' => 'Example of description for "checkbox" element (css checkbox).',
         ),
-
-        
 
         'gender' => array(
             'type'        => 'select',
@@ -75,25 +73,27 @@ class example_form extends plugme_form
         ),
 
         'image' => array(
-            'type'     => 'image',
-            'label'    => 'Profile image',
-            'required' => false,
+            'type'        => 'image',
+            'label'       => 'Profile image',
             'description' => 'Example of description for "image" element. (use wp_media)',
         ),
 
         'occupation' => array(
-            'type'     => 'textarea',
-            'label'    => 'Occupation',
-            'required' => false,
+            'type'        => 'textarea',
+            'label'       => 'Occupation',
+            'description' => 'Example of description for "texarea" element.',
+            'attrs'       => array(
+                'row'      => 4,
+            ),
             
         ),
 
-        // 'slider' => array(
-        //     'type'     => 'slider',
-        //     'label'    => 'Quote',
-        //     'required' => false,
-            
-        // ),
+        'note' => array(
+            'type'        => 'slider',
+            'label'       => 'Note',
+            'description' => 'Example of description for "slider" element. (use jquery ui)',
+           
+        ),
     );
 
     public function init()

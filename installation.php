@@ -18,9 +18,11 @@ $sql = "CREATE TABLE IF NOT EXISTS `".$table_name."` (
     `image` varchar(255),
     `dateofbirth` date,
     `enabled` tinyint(1) default '0',
+    `featured` tinyint(1) default '0',
     `website` varchar(255),
     `phone` varchar(14),
     `country` varchar(255),
+    `note` smallint(6),
     `joindate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
     UNIQUE KEY id (id)
 ) $charset_collate;";

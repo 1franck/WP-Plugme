@@ -29,8 +29,8 @@ class plugme_form_control_chosen extends plugme_form_control
 
         $attrs = $this->attributes();
 
-        if($this->is_json($data)) {
-            $data = json_decode($data);
+        if($this->is_json($this->data)) {
+            $this->data = json_decode($this->data);
         }
 
         $control = '<select '.$attrs.' class="chosen-select">';

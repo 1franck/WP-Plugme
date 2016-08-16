@@ -33,6 +33,6 @@ class plugme_form_control_switch extends plugme_form_control
                     <label class="onoffswitch-label" for="field-'.$this->name.'"></label>
                 </div>
                 <span>'.$this->options['checkbox_label'].'</span>
-            </label><br>';
+            </label>';
     }
 }

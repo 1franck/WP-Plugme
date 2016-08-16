@@ -244,8 +244,8 @@ abstract class plugme_form
 
                 $control_cn = 'plugme_form_control_'.$v['type'];
                 if(!class_exists($control_cn, false)) {
-                    continue;
-                    //wp_die(__CLASS__.': control type "'.$v['type'].'" not found');
+                    if(!WP_DEBUG) continue;
+                    else wp_die(__CLASS__.': control type "'.$v['type'].'" not found');
                 }
 
                 $control = new $control_cn($k, $this->get_data($k), $v);
@@ -258,7 +258,7 @@ abstract class plugme_form
                         <th scope="row">
                             <label for="field-'.$k.'">'.__($label).'</label>
                         </th>
-                        <td>'.$component.'<small>'.__($desc).'</small></td>
+                        <td>'.$component.'<p class="description">'.__($desc).'</p></td>
                     </tr>'; 
             }
 
@@ -353,44 +353,6 @@ abstract class plugme_form
     public function flush_data()
     {
         $this->data = array();
-    }
-
-    /**
-     * Textarea control
-     */
-    public function form_textarea($name, $data, $options = null)
-    {
-        return '<textarea id="field-'.$name.'" name="'.$name.'" class="large-text" rows="3">'.$data.'</textarea>';
-    }
-
-    /**
-     * Checkbox control
-     */
-    public function form_checkbox($name, $data, $options = null)
-    {
-        return '<input id="field-'.$name.'" type="checkbox" value="1" '.(($data === 1) ? 'checked' : '').' name="'.$name.'">';;
-    }
-
-
-    /**
-     * Slider
-     *
-     * @uses  jquery-ui
-     */
-    public function form_slider($name, $data, $options = null)
-    {
-        $id_name = 'field-'.$name;
-        //$format = (array_key_exists('format', $options)) ? $options['format'] : 'yy-mm-dd';
-        $control = '
-            <div id="slider-'.$id_name.'" style="max-width:400px;"></div>
-            <input type="hidden" id="'.$id_name.'" name="'.$name.'" value="'.$data.'" />
-            <script>
-                jQuery(document).ready(function(){
-                    jQuery("#slider-'.$id_name.'").slider(); 
-                });
-            </script>';
-
-        return $control;
     }
 
     /**

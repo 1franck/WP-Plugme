@@ -93,7 +93,7 @@ elseif($plugme->is_creating_item()) {
         ?>
     </h1>
 
-    <form id="person-form" method="post" enctype="multipart/form-data">
+    <form id="person-form" class="form-wrap" method="post" enctype="multipart/form-data">
 
         <?php $form->generate_form('person-form'); ?>
 

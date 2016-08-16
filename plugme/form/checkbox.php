@@ -30,6 +30,6 @@ class plugme_form_control_checkbox extends plugme_form_control
             <label for="'.$this->attrs_array['id'].'">
                 <input type="checkbox" '.$attrs.' value="'.$this->options['attrs']['value'].'">
                 '.$this->options['checkbox_label'].'
-            </label><br>';
+            </label>';
     }
 }

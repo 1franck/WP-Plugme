@@ -14,6 +14,8 @@ class plugme_form_control_text extends plugme_form_control
         'attrs' => array(
             'required'    => false,
             'placeholder' => '',
+            'class'       => 'regular-text',
+            'spellcheck'  => 'true',
         ),
     );
 
@@ -25,6 +27,6 @@ class plugme_form_control_text extends plugme_form_control
     public function generate()
     {
         $attrs = $this->attributes();
-        return '<input class="regular-text" type="text" '.$attrs.'><br>';
+        return '<input type="text" '.$attrs.'><br>';
     }
 }

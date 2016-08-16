@@ -30,7 +30,7 @@ class plugme_form_control_image extends plugme_form_control
 
         $id_name = $this->attrs_array['id'];
 
-        $image_url = site_url().'/'.$data;
+        $image_url = site_url().'/'.$this->data;
 
         $control = '
             <input type="text" '.$attrs.' class="regular-text">

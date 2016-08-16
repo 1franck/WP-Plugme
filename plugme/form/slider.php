@@ -17,7 +17,7 @@ class plugme_form_control_slider extends plugme_form_control
             'max'         => 100,
             'min'         => 0,
             'step'        => 1,
-            'range'       => false,
+            'range'       => 'min',
             'orientation' => 'horizontal'
         ),
     );

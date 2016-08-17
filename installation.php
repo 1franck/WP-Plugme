@@ -12,6 +12,7 @@ $sql = "CREATE TABLE IF NOT EXISTS `".$table_name."` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
     `name` varchar(255),
     `email` varchar(255),
+    `password` varchar(255),
     `gender` enum('male','female', 'both', 'unknown') default 'unknown',
     `occupation` varchar(255),
     `bio` TEXT,

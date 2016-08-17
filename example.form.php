@@ -10,12 +10,33 @@ class example_form extends plugme_form
     protected $form_fields = array(
 
         'name' => array(
-            'type'        => 'text',
+            'type'        => 'input',
             'label'       => 'Full name',
             'description' => 'Example of description for "text" input element.',
             'attrs'       => array(
                 'required'    => true,
                 'placeholder' => 'Full name',
+            ),
+        ),
+
+        'email' => array(
+            'type'        => 'input',
+            'label'       => 'Email',
+            'description' => 'Example of description for "email" input element.',
+            'attrs'       => array(
+                'required'    => true,
+                'placeholder' => 'example@email.com',
+                'type'        => 'email'
+            ),
+        ),
+
+        'password' => array(
+            'type'        => 'input',
+            'label'       => 'Password',
+            'description' => 'Example of description for "password" input element.',
+            'attrs'       => array(
+                'required'    => true,
+                'type'        => 'password'
             ),
         ),
 

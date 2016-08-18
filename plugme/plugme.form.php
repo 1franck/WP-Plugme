@@ -7,15 +7,6 @@
 
 include 'plugme.form.control.php';
 
-/**
- * Include form controls components
- */
-foreach(new DirectoryIterator(dirname(__FILE__).'/form') as $f) {
-    if (in_array(strtolower(pathinfo($f, PATHINFO_EXTENSION)), array('php'))) {
-        include 'form/'.$f;
-    }
-}
-
 abstract class plugme_form
 {
     /**
@@ -232,8 +223,23 @@ abstract class plugme_form
 
                 $control_cn = 'plugme_form_control_'.$v['type'];
                 if(!class_exists($control_cn, false)) {
-                    if(!WP_DEBUG) continue;
-                    else wp_die(__CLASS__.': control type "'.$v['type'].'" not found');
+                    $form_control_file = dirname(__FILE__).'/form/'.$v['type'].'.php';
+                    if(!file_exists($form_control_file)) {
+                        if(!WP_DEBUG) continue;
+                        else wp_die(__CLASS__.': control type "'.$v['type'].'" not found');
+                    }
+                    else {
+                        include 'form/'.$v['type'].'.php';
+                        if(!class_exists($control_cn, false)) {
+                            if(!WP_DEBUG) continue;
+                            else wp_die(__CLASS__.': control type class "plugme_form_control_'.$v['type'].'" not found in '.basename($form_control_file));
+                        }
+                    }
+                    // echo 'including '.$v['type'].'<br>';
+                    // 
+                        
+                    // }
+                    
                 }
 
                 $control = new $control_cn($k, $this->get_data($k), $v);

@@ -18,13 +18,13 @@ Highlights:
 
 
 List of form controls type:
-- Text (input)
+- Input (html input for text, password, email, url, ...)
 - Textarea
 - Texteditor (wp_editor)
 - Checkbox
 - Radio
 - Select
-- Image (wp_media)
+- Media uploading/selecting (wp_media)
 - Chosen (html select with jquery chosen)
 - Datepicker (jquery-ui)
 - Slider (jquery-ui)

@@ -10,7 +10,6 @@ abstract class plugme_form_control
     /**
      * Overload those props as you need
      */
-    
     protected $default_options = array(
         'label'       => '',
         'description' => '',

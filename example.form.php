@@ -17,6 +17,12 @@ class example_form extends plugme_form
                 'required'    => true,
                 'placeholder' => 'Full name',
             ),
+            'validation' => array(
+                'alpha_num' => array(
+                    'options' => array('space' => true, 'punc' => array(',','.','!')),
+                    'msg'     => 'Only alpha numeric value'
+                )
+            )
         ),
 
         'email' => array(

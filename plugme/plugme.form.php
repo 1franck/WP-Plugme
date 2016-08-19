@@ -1,11 +1,12 @@
 <?php
 /**
- * PlugMe form generator
+ * Plugme form
  *
  * @author  Francois Lajoie
  */
 
 include 'plugme.form.control.php';
+include 'plugme.form.validation.php';
 
 abstract class plugme_form
 {
@@ -234,12 +235,7 @@ abstract class plugme_form
                             if(!WP_DEBUG) continue;
                             else wp_die(__CLASS__.': control type class "plugme_form_control_'.$v['type'].'" not found in '.basename($form_control_file));
                         }
-                    }
-                    // echo 'including '.$v['type'].'<br>';
-                    // 
-                        
-                    // }
-                    
+                    }                   
                 }
 
                 $control = new $control_cn($k, $this->get_data($k), $v);
@@ -294,6 +290,9 @@ abstract class plugme_form
     public function validate()
     {
         $r = true;
+
+
+        $form_validation = new plugme_form_validation($form_fields, $_POST);
 
         if(empty($_POST)) $r = false;
         else {

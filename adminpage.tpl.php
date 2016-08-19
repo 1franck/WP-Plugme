@@ -33,6 +33,8 @@ elseif($plugme->is_creating_item()) {
  * Form submitted
  */
 if($plugme->is_form_submitted()) {
+
+    $form->validate();
     echo '<pre>';
     print_r($_POST);
 }

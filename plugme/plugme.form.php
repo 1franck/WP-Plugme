@@ -224,16 +224,16 @@ abstract class plugme_form
 
                 $control_cn = 'plugme_form_control_'.$v['type'];
                 if(!class_exists($control_cn, false)) {
-                    $form_control_file = dirname(__FILE__).'/form/'.$v['type'].'.php';
+                    $form_control_file = dirname(__FILE__).'/form/control/'.$v['type'].'.php';
                     if(!file_exists($form_control_file)) {
                         if(!WP_DEBUG) continue;
                         else wp_die(__CLASS__.': control type "'.$v['type'].'" not found');
                     }
                     else {
-                        include 'form/'.$v['type'].'.php';
+                        include $form_control_file;
                         if(!class_exists($control_cn, false)) {
                             if(!WP_DEBUG) continue;
-                            else wp_die(__CLASS__.': control type class "plugme_form_control_'.$v['type'].'" not found in '.basename($form_control_file));
+                            else wp_die(__CLASS__.': control type class "'.$control_cn.'" not found in '.basename($form_control_file));
                         }
                     }                   
                 }
@@ -291,24 +291,9 @@ abstract class plugme_form
     {
         $r = true;
 
+        $form_validation = new plugme_form_validation($this->form_fields, $_POST);
 
-        $form_validation = new plugme_form_validation($form_fields, $_POST);
-
-        if(empty($_POST)) $r = false;
-        else {
-            foreach($_POST as $k => $v) {
-                $field = $this->get_data($k);
-                if(array_key_exists($k, $this->form_fields)) {
-                    if(array_key_exists('required', $this->form_fields[$k]) && $this->form_fields[$k]['required']) {
-                        if(empty($v)) $r = false;
-                    } 
-                }
-            }
-        }
-
-        $this->has_errors = !$r;
-
-        return $r;
+        return $form_validation->validate();
     }
 
 

@@ -396,56 +396,56 @@ abstract class Peak_Filters_Advanced extends Peak_Filters
 		return $this->_filter_regexp($v, $regex);
 	}
 
-	/**
-	 * Check for alpha char (a-z), with optionnaly space(s) and custom punctuation(s)
-	 *
-	 * @uses   FILTER_VALIDATE_REGEXP
-	 * @param  string     $v
-	 * @param  array|null $opt keys supported: lower, upper, space, punc. if null, lower and upper key are used
-	 * @return bool
-	 */
-	protected function _filter_alpha($v, $opt = null, $return_regopt = false)
-	{
-		if(is_array($opt)) {
-			$regopt = array();
-			if(isset($opt['lower']) && ($opt['lower'] === true)) $regopt[] = 'a-z';
-			if(isset($opt['upper']) && ($opt['upper'] === true)) $regopt[] = 'A-Z';
-			if(isset($opt['french']) && ($opt['french'] === true)) $regopt[] = 'À-ÿ';
-			if(empty($regopt)) $regopt = array('a-z','A-Z','À-ÿ');
-			if(isset($opt['space']) && ($opt['space'] === true)) $regopt[] = '\s';
-			if(isset($opt['punc']) && is_array($opt['punc'])) {
-			    foreach($opt['punc'] as $punc) {
-			        $regopt[] = '\\'.$punc;
-			    }
-			}
-			elseif(isset($opt['punc'])) {
-				$punc   = $opt['punc'];
-				$strlen = strlen($punc);
-				for($i = 0; $i < $strlen; $i++) {
-				    $regopt[] = '\\'.$punc{$i};
-				}
-			}
-		}
-		else $regopt = array('a-z','A-Z','À-ÿ');
+	// /**
+	//  * Check for alpha char (a-z), with optionnaly space(s) and custom punctuation(s)
+	//  *
+	//  * @uses   FILTER_VALIDATE_REGEXP
+	//  * @param  string     $v
+	//  * @param  array|null $opt keys supported: lower, upper, space, punc. if null, lower and upper key are used
+	//  * @return bool
+	//  */
+	// protected function _filter_alpha($v, $opt = null, $return_regopt = false)
+	// {
+	// 	if(is_array($opt)) {
+	// 		$regopt = array();
+	// 		if(isset($opt['lower']) && ($opt['lower'] === true)) $regopt[] = 'a-z';
+	// 		if(isset($opt['upper']) && ($opt['upper'] === true)) $regopt[] = 'A-Z';
+	// 		if(isset($opt['french']) && ($opt['french'] === true)) $regopt[] = 'À-ÿ';
+	// 		if(empty($regopt)) $regopt = array('a-z','A-Z','À-ÿ');
+	// 		if(isset($opt['space']) && ($opt['space'] === true)) $regopt[] = '\s';
+	// 		if(isset($opt['punc']) && is_array($opt['punc'])) {
+	// 		    foreach($opt['punc'] as $punc) {
+	// 		        $regopt[] = '\\'.$punc;
+	// 		    }
+	// 		}
+	// 		elseif(isset($opt['punc'])) {
+	// 			$punc   = $opt['punc'];
+	// 			$strlen = strlen($punc);
+	// 			for($i = 0; $i < $strlen; $i++) {
+	// 			    $regopt[] = '\\'.$punc{$i};
+	// 			}
+	// 		}
+	// 	}
+	// 	else $regopt = array('a-z','A-Z','À-ÿ');
 
-		if($return_regopt) return $regopt;
-		return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
-	}
+	// 	if($return_regopt) return $regopt;
+	// 	return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
+	// }
 
-	/**
-	 * Same as _filter_alpha but support number(s)
-	 * 
-	 * @uses   FILTER_VALIDATE_REGEXP
-	 * @param  string $v
-	 * @param  array  $opt
-	 * @return bool
-	 */
-	protected function _filter_alpha_num($v, $opt = null)
-	{
-		$regopt = $this->_filter_alpha(null, $opt, true);
-		$regopt[] = '0-9';
-		return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
-	}
+	// /**
+	//  * Same as _filter_alpha but support number(s)
+	//  * 
+	//  * @uses   FILTER_VALIDATE_REGEXP
+	//  * @param  string $v
+	//  * @param  array  $opt
+	//  * @return bool
+	//  */
+	// protected function _filter_alpha_num($v, $opt = null)
+	// {
+	// 	$regopt = $this->_filter_alpha(null, $opt, true);
+	// 	$regopt[] = '0-9';
+	// 	return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
+	// }
 	
 	/**
 	 * Same as _filter_alpha_num but some default punctuations/symbol
@@ -462,34 +462,34 @@ abstract class Peak_Filters_Advanced extends Peak_Filters
 		return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
 	}
 
-    /**
-     * Check for integer
-     *
-     * @uses   FILTER_VALIDATE_INT
-     * @param  integer $v
-     * @param  array   $opt keys supported: min, max. if null, no range is used
-     * @return bool
-     */
-	protected function _filter_int($v, $opt = null)
-	{
-	    if(!isset($opt)) {
-	        return filter_var($v, FILTER_VALIDATE_INT);
-	    }
-	    else {
-	        if(filter_var($v, FILTER_VALIDATE_INT) !== false) {
-	            $return = array();
-	            if(isset($opt['min'])) {
-	                $return['min'] = ($v >= $opt['min']) ? true : false;
-	            }
-	            if(isset($opt['max'])) {
-	                $return['max'] = ($v <= $opt['max']) ? true : false;
-	            }
-	            foreach($return as $r) if($r === false) return false;
-	            return true;
-	        }
-	        else return false;
-	    }
-	}
+ //    /**
+ //     * Check for integer
+ //     *
+ //     * @uses   FILTER_VALIDATE_INT
+ //     * @param  integer $v
+ //     * @param  array   $opt keys supported: min, max. if null, no range is used
+ //     * @return bool
+ //     */
+	// protected function _filter_int($v, $opt = null)
+	// {
+	//     if(!isset($opt)) {
+	//         return filter_var($v, FILTER_VALIDATE_INT);
+	//     }
+	//     else {
+	//         if(filter_var($v, FILTER_VALIDATE_INT) !== false) {
+	//             $return = array();
+	//             if(isset($opt['min'])) {
+	//                 $return['min'] = ($v >= $opt['min']) ? true : false;
+	//             }
+	//             if(isset($opt['max'])) {
+	//                 $return['max'] = ($v <= $opt['max']) ? true : false;
+	//             }
+	//             foreach($return as $r) if($r === false) return false;
+	//             return true;
+	//         }
+	//         else return false;
+	//     }
+	// }
 
 	/**
 	 * Validate float number

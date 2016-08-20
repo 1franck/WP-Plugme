@@ -84,6 +84,8 @@ abstract class plugme_form
 
         $this->data_source = $data_source;
 
+        $this->validation = new plugme_form_validation();
+
         $this->init();
 
         $this->assets_url = plugins_url(basename(realpath(dirname(__FILE__).'/../')).'/plugme/assets');
@@ -203,6 +205,7 @@ abstract class plugme_form
     {
         if(!empty($this->form_fields)) {
 
+            $errors = $this->validation->get_errors();
             $first_field = '';
             $save_btn = ($this->new_item) ? __('Save') : __('Save changes');
 
@@ -220,7 +223,7 @@ abstract class plugme_form
 
                 if(empty($first_field)) $first_field = $k;
 
-                if(!array_key_exists('type', $v)) $v['type'] = 'text';
+                if(!array_key_exists('type', $v)) $v['type'] = 'input';
 
                 $control_cn = 'plugme_form_control_'.$v['type'];
                 if(!class_exists($control_cn, false)) {
@@ -243,12 +246,19 @@ abstract class plugme_form
                 $component = $control->generate();
                 $label     = $control->get_option('label');
                 $desc      = $control->get_option('description');
- 
+
+                $error_class = '';
+                $error_msg = '';
+                if(array_key_exists($k, $errors)) {
+                    $error_class = 'error';
+                    $error_msg = '<p class="error">'.$errors[$k].'</p>';
+                }
+
                 echo '<tr>
                         <th scope="row">
-                            <label for="field-'.$k.'">'.__($label).'</label>
+                            <label class="'.$error_class.'" for="field-'.$k.'">'.__($label).'</label>
                         </th>
-                        <td>'.$component.'<p class="description">'.__($desc).'</p></td>
+                        <td>'.$component.'<p class="description">'.__($desc).'</p>'.$error_msg.'</td>
                     </tr>'; 
             }
 
@@ -277,6 +287,12 @@ abstract class plugme_form
                     jQuery("#'.$form_id_name.'").parsley();
                 });
                 </script>
+                <style><!--
+                .error {
+                    color:#cc0000 !important;
+                }
+                -->
+                </style>
             ';
            
         }
@@ -291,9 +307,14 @@ abstract class plugme_form
     {
         $r = true;
 
-        $form_validation = new plugme_form_validation($this->form_fields, $_POST);
+        $this->data = $this->data_source->strip_unwanted_column($_POST);
 
-        return $form_validation->validate();
+        return $this->validation->validate($this->form_fields, $_POST);
+    }
+
+    public function get_errors()
+    {
+        return $this->validation->get_errors();
     }
 
 

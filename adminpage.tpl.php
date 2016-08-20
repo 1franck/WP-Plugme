@@ -34,9 +34,10 @@ elseif($plugme->is_creating_item()) {
  */
 if($plugme->is_form_submitted()) {
 
-    $form->validate();
-    echo '<pre>';
-    print_r($_POST);
+    if($form->validate()) {
+        $form_pass = true;
+    }
+    else $form_failed = true;
 }
 
 
@@ -100,6 +101,25 @@ if($plugme->is_form_submitted()) {
             }
         ?>
     </h1>
+
+    <?php if(isset($form_failed)) : ?>
+        <div class="notice notice-error is-dismissible" id="message">
+            <p><?php _e('Form contain error(s)'); ?></p>
+            <button class="notice-dismiss" type="button">
+                <span class="screen-reader-text">Dismiss this notice.</span>
+            </button>
+        </div>
+
+    <?php elseif(isset($form_pass)): ?>
+
+        <div class="notice notice-success is-dismissible" id="message">
+            <p><?php _e('Item saved'); ?></p>
+            <button class="notice-dismiss" type="button">
+                <span class="screen-reader-text">Dismiss this notice.</span>
+            </button>
+        </div>
+
+    <?php endif; ?>
 
     <form id="person-form" class="form-wrap" method="post" enctype="multipart/form-data">
 

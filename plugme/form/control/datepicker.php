@@ -10,6 +10,7 @@ class plugme_form_control_datepicker extends plugme_form_control
      * @var array
      */
     protected $default_options = array(
+        'label'       => '',
         'format'      => 'yy-mm-dd', //@see jquery-ui datepicker doc
         'description' => '',  
         'attrs' => array(

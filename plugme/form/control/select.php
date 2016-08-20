@@ -10,6 +10,7 @@ class plugme_form_control_select extends plugme_form_control
      * @var array
      */
     protected $default_options = array(
+        'label'       => '',
         'description' => '', 
         'options'     => array(),
         'attrs'       => array(

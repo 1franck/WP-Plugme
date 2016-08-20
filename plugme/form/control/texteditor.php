@@ -10,12 +10,13 @@ class plugme_form_control_texteditor extends plugme_form_control
      * @var array
      */
     protected $default_options = array(
+        'label'       => '',
         'description' => '',  
-        'attrs' => array(
+        'attrs'       => array(
             'required'    => false,
             'placeholder' => '',
         ),
-        'settings' => array(
+        'settings'    => array(
             'teeny'         => true,
             'textarea_rows' => 8,
             'tabindex'      => 1,

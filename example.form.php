@@ -18,22 +18,31 @@ class example_form extends plugme_form
                 'placeholder' => 'Full name',
             ),
             'validation' => array(
-
+                //'if_not_empty', //conditonnal validator
                 // 'alphanum' => array(
                 //     'options' => array('space' => false, 'punc' => array(',','.','!')),
                 //     'msg'     => 'Only alpha numeric value'
                 // ),
-                'text' => array(
-                    'msg' => 'Text only',
-                )
+                
+                // 'text' => array(
+                //     'msg' => 'Text only',
+                // )
                 // 'int' => array(
                 //     'options' => array('min' => 0, 'max' => 1000),
                 //     'msg' => 'Only number between 0 and 1000'
+                // ),
+                // 'regex' => array(
+                //     'options' => '/^[A-Z]+$/',
+                //     'msg' => 'Regex A-Z'
                 // ),
                 // 'float' => array(
                 //     'options' => array('min' => 0, 'max' => 1000),
                 //     'msg' => 'Only float number between 0 and 1000'
                 // )
+                'enum' => array(
+                    'options' => array('test', 'test1', 'test2'),
+                    'msg' => 'Only test, test1 and test2'
+                ),
             )
         ),
 

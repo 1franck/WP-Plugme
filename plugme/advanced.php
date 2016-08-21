@@ -447,20 +447,20 @@ abstract class Peak_Filters_Advanced extends Peak_Filters
 	// 	return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
 	// }
 	
-	/**
-	 * Same as _filter_alpha_num but some default punctuations/symbol
-	 * ().?!-_,;'’"%$:/
-	 *
-	 * @param  string $v
-	 * @return bool
-	 */
-	protected function _filter_text($v)
-	{
-	    $opt = array('space' => true, 'punc' => array('(', ')', '.', '?', '!', '-',  '_', ',', ';', '\'', '’', '"', '%', '$', ':', '/'));
-	    $regopt = $this->_filter_alpha(null, $opt, true);
-		$regopt[] = '0-9';
-		return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
-	}
+	// /**
+	//  * Same as _filter_alpha_num but some default punctuations/symbol
+	//  * ().?!-_,;'’"%$:/
+	//  *
+	//  * @param  string $v
+	//  * @return bool
+	//  */
+	// protected function _filter_text($v)
+	// {
+	//     $opt = array('space' => true, 'punc' => array('(', ')', '.', '?', '!', '-',  '_', ',', ';', '\'', '’', '"', '%', '$', ':', '/'));
+	//     $regopt = $this->_filter_alpha(null, $opt, true);
+	// 	$regopt[] = '0-9';
+	// 	return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => '/^['.implode('',$regopt).']+$/')));
+	// }
 
  //    /**
  //     * Check for integer
@@ -491,36 +491,36 @@ abstract class Peak_Filters_Advanced extends Peak_Filters
 	//     }
 	// }
 
-	/**
-	 * Validate float number
-	 *
-	 * @param  float $v
-	 * @param  array $opt
-	 * @return bool
-	 */
-	protected function _filter_float($v, $opt = null)
-	{
-		if(!isset($opt)) {
-	        return filter_var($v, FILTER_VALIDATE_FLOAT);
-	    }
-	    else {
-	    	if(isset($opt['thousand'])) $flag = FILTER_FLAG_ALLOW_THOUSAND;
-	    	else $flag = null;
+	// /**
+	//  * Validate float number
+	//  *
+	//  * @param  float $v
+	//  * @param  array $opt
+	//  * @return bool
+	//  */
+	// protected function _filter_float($v, $opt = null)
+	// {
+	// 	if(!isset($opt)) {
+	//         return filter_var($v, FILTER_VALIDATE_FLOAT);
+	//     }
+	//     else {
+	//     	if(isset($opt['thousand'])) $flag = FILTER_FLAG_ALLOW_THOUSAND;
+	//     	else $flag = null;
 
-	        if(filter_var($v, FILTER_VALIDATE_FLOAT, $flag) !== false) {
-	            $return = array();
-	            if(isset($opt['min'])) {
-	                $return['min'] = ($v >= $opt['min']) ? true : false;
-	            }
-	            if(isset($opt['max'])) {
-	                $return['max'] = ($v <= $opt['max']) ? true : false;
-	            }
-	            foreach($return as $r) if($r === false) return false;
-	            return true;
-	        }
-	        else return false;
-	    }
-	}
+	//         if(filter_var($v, FILTER_VALIDATE_FLOAT, $flag) !== false) {
+	//             $return = array();
+	//             if(isset($opt['min'])) {
+	//                 $return['min'] = ($v >= $opt['min']) ? true : false;
+	//             }
+	//             if(isset($opt['max'])) {
+	//                 $return['max'] = ($v <= $opt['max']) ? true : false;
+	//             }
+	//             foreach($return as $r) if($r === false) return false;
+	//             return true;
+	//         }
+	//         else return false;
+	//     }
+	// }
 
     /**
      * Check if data match with another $_data key
@@ -534,16 +534,16 @@ abstract class Peak_Filters_Advanced extends Peak_Filters
 		return ((isset($this->_data[$opt])) && ($v === ($this->_data[$opt]))) ? true : false;
 	}
 
-    /**
-     * Check for a regular expression
-     *
-     * @uses   FILTER_VALIDATE_REGEXP
-     * @param  string $v
-     * @param  string $regexp
-     * @return bool
-     */
-	protected function _filter_regexp($v, $regexp)
-	{
-		return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => $regexp)));
-	}	
+ //    *
+ //     * Check for a regular expression
+ //     *
+ //     * @uses   FILTER_VALIDATE_REGEXP
+ //     * @param  string $v
+ //     * @param  string $regexp
+ //     * @return bool
+     
+	// protected function _filter_regexp($v, $regexp)
+	// {
+	// 	return filter_var($v, FILTER_VALIDATE_REGEXP, array('options' => array('regexp' => $regexp)));
+	// }	
 }

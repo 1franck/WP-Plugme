@@ -55,6 +55,7 @@ class example_data_source extends plugme_data_source
         $this->table = $this->db->prefix.'plugme_example';
     }
 }
+```
 
 To generate a html table list to naviguate throw your table data, extends class `plugme_list_table`
 

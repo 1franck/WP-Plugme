@@ -13,6 +13,14 @@ class plugme_form_validation
     protected $data       = array();
     protected $errors     = array();
 
+    /**
+     * Validate data
+     * Errors are stocked $errors
+     * 
+     * @param  $validators validator field and stuff
+     * @param  $data       data to validate
+     * @return bool        validation result
+     */
     public function validate($validators, $data)
     {
         
@@ -29,6 +37,17 @@ class plugme_form_validation
 
                     // process validator
                     foreach($v['validation'] as $validator => $vdata) {
+
+                        //conditional validator
+                        if(isset($skip_validation_for) && $skip_validation_for === $fieldname) continue;
+                        else $skip_validation_for = null;
+
+                        if($validator == 0 && $vdata === 'if_not_empty') {
+                            if(empty($this->data[$fieldname])) {
+                                $skip_validation_for = $fieldname;
+                                continue;
+                            }
+                        }
 
                         //check validation config
                         $error_msg = __('An error occurred'); //default validator error msg

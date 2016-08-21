@@ -41,7 +41,10 @@ abstract class plugme_form_validator
     {
         $this->name = $name;
 
-        $this->options = array_merge($this->default_options, $options);
+        if(is_array($options)){
+            $this->options = array_merge($this->default_options, $options);
+        }
+        else $this->options = $options;
 
         $this->data = $data;
 

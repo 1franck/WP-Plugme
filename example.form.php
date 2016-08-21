@@ -3,7 +3,7 @@
 include_once dirname(__FILE__).'/plugme/plugme.form.php';
 
 /**
- * Movie form
+ * Form example
  */
 class example_form extends plugme_form
 {

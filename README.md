@@ -57,7 +57,7 @@ class example_data_source extends plugme_data_source
 }
 ```
 
-To generate a html table list to naviguate throw your table data, extends class `plugme_list_table`
+To generate a html table list to naviguate through your table data, extends class `plugme_list_table`
 
 ```php
 /**

@@ -85,7 +85,6 @@ class example_list_table extends plugme_list_table
         'gender'         => 'Gender',
         'dateofbirth'    => 'Date of birth',
         'email'          => 'Email',
-        'image'          => 'Profile image',
     );
 
     protected $sortable_columns = array(
@@ -165,7 +164,7 @@ class example_form extends plugme_form
                 'placeholder' => 'example@email.com',
                 'type'        => 'email'
             ),
-            validation => array(
+            'validation' => array(
                 'email' => array(
                     'msg' => Enter a valid email address'
                 )

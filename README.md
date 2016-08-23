@@ -48,11 +48,18 @@ In your data source class, you need to define your table name and your primary k
  */
 class example_data_source extends plugme_data_source
 {
+    protected $table = 'plugme_example';
     protected $table_primary_column = 'id';
 
-    public function init()
+    // called after class construct
+    public function init() {}
+
+    // called before save() after sanitizing
+    public function pre_save($data)
     {
-        $this->table = $this->db->prefix.'plugme_example';
+        if(!array_key_exists('enabled', $data)) $data['enabled'] = 0;
+
+        return $data;
     }
 }
 ```

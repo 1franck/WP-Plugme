@@ -53,8 +53,17 @@ class example_list_table extends plugme_list_table
      */
     public function bulk_action_delete()
     {
-        //do something
-        wp_die('Items deleted (or they would be if we had items to delete)!');
+        $data = $this->get_bulk_action_data();
+        if(!empty($data)) {
+            $this->data_source->delete($data);
+            echo '
+                <div class="notice notice-success is-dismissible" id="message">
+                    <p>Items '.(is_array($data) ? implode(', ',$data) : $data).' deleted</p>
+                    <button class="notice-dismiss" type="button">
+                        <span class="screen-reader-text">Dismiss this notice.</span>
+                    </button>
+                </div>';
+        }
     }
 
     public function column_image($item)

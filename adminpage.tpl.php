@@ -32,64 +32,26 @@ elseif($plugme->is_creating_item()) {
 /**
  * Form submitted
  */
-if($plugme->is_form_submitted()) {
+if($plugme->is_form_submitted($_POST)) {
 
-    if($form->validate()) {
+    if($form->validate($_POST)) {
         $form_pass = true;
+        $item_saved = $form->save_data($_POST);
     }
-    else $form_failed = true;
+    else {
+        $form_failed = true;
+        $form->set_data($_POST);
+    }
 }
 
-
-// include_once dirname(__FILE__).'/../plugme/plugme.php'; 
-// include_once dirname(__FILE__).'/../movies.list.data.php'; 
-// include_once dirname(__FILE__).'/../movies.form.data.php'; 
-
-// $plugme = plugme::getInstance();
-
-// $list_table = new themoviesdb_movies_list_data();
-// $form = new themoviesdb_movies_form_data();
-
-// $plugme->register_list_table($list_table);
-// $plugme->register_form($form);
-
-// /**
-//  * Edit an item
-//  */
-// if($plugme->is_editing_item()) {
-//     $form->load_data_id($plugme->get_editing_id());
-// }
-// /**
-//  * Creating new item
-//  */
-// elseif($plugme->is_creating_item()) {
-//     $form->create_new_item();
-// }
-
-
-// /**
-//  * Check if form submitted
-//  */
-// if($plugme->is_form_submitted()) {
-//     if($form->validate()) {
-//         $form->save_data();
-//         $form->flush_data();
-//         $save_success = true;
-//     }
-//     else {
-//         $form_error = true;
-//         $form->set_data($_POST);
-//     }
-// }
-// 
 
 ?>
 
 <div class="wrap">
 
-<?php if($form->has_data() || $form->is_creating_item()) : ?>
+<?php if($plugme->is_editing_item() || $plugme->is_creating_item()) : ?>
 
-    <!-- --------------- FORM ----------------- -->
+    <!-- FORM -->
     <h1>
         <?php
             $item = $list_table->get_option('singular');
@@ -113,7 +75,7 @@ if($plugme->is_form_submitted()) {
     <?php elseif(isset($form_pass)): ?>
 
         <div class="notice notice-success is-dismissible" id="message">
-            <p><?php _e('Item saved'); ?></p>
+            <p><?php _e('Item saved').' (#'.$item_saved['id'].' - '.$item_saved['name'].')'; ?></p>
             <button class="notice-dismiss" type="button">
                 <span class="screen-reader-text">Dismiss this notice.</span>
             </button>
@@ -129,7 +91,7 @@ if($plugme->is_form_submitted()) {
 
 <?php else : ?>
 
-    <!-- ------------ LIST TABLE -------------- -->
+    <!-- LIST TABLE -->
     <h1>
         <?php echo $list_table->get_option('plural'); ?>
         <a class="page-title-action" href="<?php echo $plugme->get_new_item_link(); ?>">

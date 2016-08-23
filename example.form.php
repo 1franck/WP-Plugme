@@ -159,20 +159,11 @@ class example_form extends plugme_form
     public function init()
     {
        
-        //$this->form_fields['country']['options'] = $this->get_countries_list();
+        $this->form_fields['country']['options'] = $this->get_countries_list();
             
     }
 
-    public function pre_save($data)
-    {
-        if(!array_key_exists('enabled', $data)) $data['enabled'] = 0;
 
-        // echo '<pre>';
-        // print_r($_POST);
-        // print_r($data['directors']); exit();
-
-        return $data;
-    }
 
 
 }

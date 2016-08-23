@@ -114,6 +114,11 @@ class plugme_form_validation
         return (empty($this->errors)) ? true : false;
     }
 
+    /**
+     * Get errors
+     * 
+     * @return array
+     */
     public function get_errors()
     {
         return $this->errors;

@@ -95,7 +95,7 @@ class plugme_admin
     {
         $this->has_registered_list_table();
 
-        if(isset($_GET[$this->list_table->get_option('singular')]) && isset($_GET['action']) && $_GET['action'] === 'edit') {
+        if(isset($_GET[strtolower($this->list_table->get_option('singular'))]) && isset($_GET['action']) && $_GET['action'] === 'edit') {
             return true;
         }
         return false;
@@ -133,7 +133,7 @@ class plugme_admin
     public function get_editing_id()
     {
         if($this->is_editing_item()) {
-            return $_GET[$this->list_table->get_option('singular')];
+            return $_GET[strtolower($this->list_table->get_option('singular'))];
         }
     }
 

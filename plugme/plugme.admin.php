@@ -73,6 +73,11 @@ class plugme_admin
         }
     }
 
+    /**
+     * Check if is creating a new item
+     * 
+     * @return boolean
+     */
     public function is_creating_item()
     {
         if(isset($_GET['action']) && $_GET['action'] === 'new') {
@@ -80,17 +85,6 @@ class plugme_admin
         }
         return false;
     }
-
-    /**
-     * Get form action link for a new item
-     * 
-     * @return  string
-     */
-    public function get_new_item_link()
-    {
-        return '?page='.$_REQUEST['page'].'&action=new';
-    }
-
 
     /**
      * User is trying to edit an item
@@ -107,14 +101,27 @@ class plugme_admin
         return false;
     }
 
+
+    /**
+     * Get form action link for a new item
+     * 
+     * @return  string
+     */
+    public function get_new_item_link()
+    {
+        return '?page='.$_REQUEST['page'].'&action=new';
+    }
+
+
     /**
      * Check if form submitted
-     * 
+     *
+     * @param  array form data
      * @return boolean
      */
-    public function is_form_submitted()
+    public function is_form_submitted($data, $key = 'submit')
     {
-        if(isset($_POST['submit'])) return true;
+        if(array_key_exists($key, $data)) return true;
         return false;
     }
 

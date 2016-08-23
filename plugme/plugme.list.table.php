@@ -118,13 +118,13 @@ abstract class plugme_list_table extends plugme_wp_list_table
         //Build row actions
         $actions = array(
             'edit'      => sprintf(
-                '<a href="?page=%s&action=%s&'.$this->options['singular'].'=%s">'.__('Edit').'</a>',
+                '<a href="?page=%s&action=%s&'.strtolower($this->options['singular']).'=%s">'.__('Edit').'</a>',
                 $_REQUEST['page'],
                 'edit',
                 $item[$this->data_source->table_pk]
             ),
             'delete'    => sprintf(
-                '<a href="?page=%s&action=%s&'.$this->options['singular'].'=%s">'.__('Delete').'</a>',
+                '<a href="?page=%s&action=%s&'.strtolower($this->options['singular']).'=%s">'.__('Delete').'</a>',
                 $_REQUEST['page'],
                 'delete',
                 $item[$this->data_source->table_pk]
@@ -153,7 +153,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
     {
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label ("movie")
+            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label
             /*$2%s*/ $item[$this->data_source->table_pk] //The value of the checkbox should be the record's id
         );
     }
@@ -187,6 +187,30 @@ abstract class plugme_list_table extends plugme_wp_list_table
     public function get_option($name)
     {
         return $this->options[$name];
+    }
+
+    /**
+     * Get bulk action data
+     * 
+     * @return array
+     */
+    public function get_bulk_action_data()
+    {
+        $keyname = strtolower($this->options['singular']);
+        $source = array();
+
+        if(isset($_POST) && !empty($_POST)) {
+            $source = $_POST;
+        }
+        elseif(isset($_GET) && !empty($_GET)) {
+            $source = $_GET;
+        }
+
+        if(array_key_exists($keyname, $source)) {
+            return $source[$keyname];
+        }
+
+        return array();
     }
 
     /**
@@ -245,7 +269,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
 
     /**
      * Handle your bulk actions. 
-     * It look fir bulk_action_[youractionname] in order execute a bulk action
+     * It look for bulk_action_[youractionname] in order execute a bulk action
      * 
      * @see $this->prepare_items()
      */

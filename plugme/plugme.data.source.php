@@ -107,11 +107,7 @@ abstract class plugme_data_source
      */
     public function save($data, $sanitize = true)
     {
-        echo '1';
-        print_r($data);
         $data = $this->strip_unwanted_column($data);
-        print_r($data);
-        echo '%';
 
         if($sanitize) {
             $data = $this->sanitize_data($data);
@@ -159,7 +155,7 @@ abstract class plugme_data_source
         if(!is_array($id)) {
             $id = array($id);
         }
-        
+
         foreach($id as $v) {
             $this->db->query(
                 $this->db->prepare("DELETE FROM $this->table WHERE `$this->table_pk` = %s", $v)
@@ -180,7 +176,7 @@ abstract class plugme_data_source
                 $this->columns[] = $cn;
             }
         }
-        //print_r($this->columns);
+
         return $this->columns;
     }
 

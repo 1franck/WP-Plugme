@@ -11,9 +11,14 @@ abstract class plugme_data_source
     /**
      * Overload those props as you need
      */
-    protected $type     = 'sql';   // sql or raw
-    protected $table    = '';      // if data source is sql, we need to specify the table name
-    protected $table_pk = 'id';    // table primary key
+    protected $type             = 'sql'; // sql or raw
+    protected $table            = '';    // if data source is sql, we need to specify the table name
+    protected $table_pk         = 'id';  // table primary key
+    protected $add_wp_db_prefix = true;  // will add wp_prefix on your table name on class contruct
+    protected $sanitize = array(
+        'filter' => FILTER_SANITIZE_STRING,
+        'flags'  => array(FILTER_FLAG_STRIP_HIGH, FILTER_FLAG_STRIP_LOW)
+    );
 
     /**
      * Don't overload those props
@@ -27,6 +32,11 @@ abstract class plugme_data_source
     public function init() {}
 
     /**
+     * Called before save, after sanitizing
+     */
+    public function pre_save($data) {}
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -34,6 +44,10 @@ abstract class plugme_data_source
         global $wpdb;
 
         $this->db = $wpdb;
+
+        if($this->add_wp_db_prefix) {
+            $this->table = $this->db->prefix.$this->table; 
+        }
 
         $this->init();
     }
@@ -85,6 +99,75 @@ abstract class plugme_data_source
     }
 
     /**
+     * Save data
+     * 
+     * @param  array  $data
+     * @param  boolean $sanitize
+     * @return array 
+     */
+    public function save($data, $sanitize = true)
+    {
+        echo '1';
+        print_r($data);
+        $data = $this->strip_unwanted_column($data);
+        print_r($data);
+        echo '%';
+
+        if($sanitize) {
+            $data = $this->sanitize_data($data);
+        }
+
+        $data = $this->pre_save($data);
+
+        //insert
+        if(!array_key_exists($this->table_pk, $data) || 
+            empty($data[$this->table_pk])) { 
+
+            $this->db->insert(
+                $this->table,
+                $data
+            );
+
+            $data[$this->table_pk] = $this->db->insert_id;
+        }
+        else { //update
+
+            $this->db->update(
+                $this->table,
+                $data,
+                array(
+                    $this->table_pk => $data[$this->table_pk]
+                )
+            );
+        }
+
+        return $data;
+    }
+
+    /**
+     * Delete item(s) based on $table_pk column name
+     * 
+     * @param  string|array|int  $id     
+     * @param  boolean $secure
+     */
+    public function delete($id, $secure = true)
+    {
+        if($secure && (!isset($id) || empty($id))) {
+            return;
+        }
+
+        if(!is_array($id)) {
+            $id = array($id);
+        }
+        
+        foreach($id as $v) {
+            $this->db->query(
+                $this->db->prepare("DELETE FROM $this->table WHERE `$this->table_pk` = %s", $v)
+            );
+        }
+    }
+
+    /**
      * List columns from a table
      * 
      * @param  string $table 
@@ -92,11 +175,12 @@ abstract class plugme_data_source
      */
     public function list_columns()
     {
-        if(!empty($this->columns)) {
+        if(empty($this->columns)) {
             foreach ( $this->db->get_col( "DESC " . $this->table, 0 ) as $cn ) {
                 $this->columns[] = $cn;
             }
         }
+        //print_r($this->columns);
         return $this->columns;
     }
 
@@ -115,6 +199,33 @@ abstract class plugme_data_source
             if(in_array($k, $cols)) $final[$k] = $v;
         }
         return $final;
+    }
+
+    /**
+     * Sanitize all data
+     */
+    public function sanitize_data($data)
+    {
+        return $this->sanitize_data_recursive($data, $this->sanitize['filter'], $this->sanitize['flags']);
+    }
+
+    /**
+     * Make globalSanitize() recursive
+     *
+     * @param  array   $array
+     * @param  integer $filter
+     * @param  integer $flags
+     * @return array
+     */
+    private function sanitize_data_recursive($array, $filter, $flags)
+    {
+        foreach($array as $k => $v) {
+            if(!is_array($v)) $array[$k] = filter_var($v, $filter, $flags);
+            else {
+                $array[$k] = $this->sanitize_data_recursive($v, $filter, $flags);
+            }
+        }
+        return $array;
     }
 
 }

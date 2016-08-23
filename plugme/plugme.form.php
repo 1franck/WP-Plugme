@@ -150,7 +150,7 @@ abstract class plugme_form
      */
     public function get_data($name)
     {
-        if($this->new_item) {
+        if($this->new_item && !array_key_exists($name, $this->data)) {
             if(array_key_exists($name, $this->form_fields)) {
                 if(array_key_exists('default', $this->form_fields[$name])) {
                     return $this->form_fields[$name]['default'];
@@ -201,6 +201,16 @@ abstract class plugme_form
             $errors = $this->validation->get_errors();
             $first_field = '';
             $save_btn = ($this->new_item) ? __('Save') : __('Save changes');
+
+            if(!empty($errors)) {
+                echo '
+                    <div class="notice notice-error is-dismissible" id="message">
+                        <p>'.__('Form contains error(s)').'</p>
+                        <button class="notice-dismiss" type="button">
+                            <span class="screen-reader-text">Dismiss this notice.</span>
+                        </button>
+                    </div>';
+            }
 
             // form buttons
             echo '

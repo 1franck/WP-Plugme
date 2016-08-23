@@ -52,26 +52,9 @@ abstract class plugme_form
     protected $has_errors = false;   // form has error @see
 
     /**
-     * Set the list data. Should return an array
-     */
-    protected function set_data($data) 
-    {
-        $this->data = $data;
-    }
-
-    /**
      * Called after class construct
      */
     public function init() {}
-
-    /**
-     * Called before updating/inserting item
-     * Must return $data
-     */
-    public function pre_save($data)
-    {
-        return $data;
-    }
 
     /**
      * Constructor
@@ -133,21 +116,31 @@ abstract class plugme_form
         }
     }
 
+
+    /**
+     * Set the form data
+     * 
+     * @param array  $data     
+     * @param boolean $sanitize 
+     */
+    public function set_data($data, $sanitize = true) 
+    {
+        if($sanitize) {
+            $data = $this->data_source->sanitize_data($data);
+        }
+        $this->data = $data;
+    }
+
     /**
      * Check if data empty
      * 
      * @return boolean
      */
-    public function has_data()
-    {
-        if(!empty($this->data)) return true;
-        return false;
-    }
-
-    public function has_errors()
-    {
-        return $this->has_errors;
-    }
+    // public function has_data()
+    // {
+    //     if(!empty($this->data)) return true;
+    //     return false;
+    // }
 
     /**
      * Get field data
@@ -300,55 +293,58 @@ abstract class plugme_form
 
     /**
      * Simple validation
-     * 
+     *
+     * @param  array $data
      * @return boolean
      */
-    public function validate()
+    public function validate($data)
     {
         $r = true;
 
-        $this->data = $this->data_source->strip_unwanted_column($_POST);
+        $this->data = $this->data_source->strip_unwanted_column($data);
 
-        return $this->validation->validate($this->form_fields, $_POST);
+        return $this->validation->validate($this->form_fields, $data);
     }
 
+    /**
+     * Get form validation errors
+     * 
+     * @return array
+     */
     public function get_errors()
     {
         return $this->validation->get_errors();
     }
 
-
-    public function save_data()
+    /**
+     * Check if has errors
+     * 
+     * @return boolean
+     */
+    public function has_errors()
     {
-        if(empty($_POST[$this->data_source->table_pk])) {
-            //insert
-
-            $data_to_save = $this->data_source->strip_unwanted_column($_POST);
-
-            $data_to_save = $this->pre_save($data_to_save);
-
-            $this->db->insert(
-                $this->data_source_table,
-                $data_to_save
-            );
-        }
-        else {
-            //update
-            
-            $data_to_save = $this->data_source->strip_unwanted_column($_POST);
-
-            $data_to_save = $this->pre_save($data_to_save);
-
-            $this->db->update(
-                $this->data_source_table,
-                $data_to_save,
-                array(
-                    $this->data_source->table_pk => $_POST[$this->data_source->table_pk]
-                )
-            );
-        }
+        $errors = $this->has_errors;
+        return empty($errors);
     }
 
+    /**
+     * Save data @see plugme_data_source::save() 
+     * 
+     * @param  array   $data    
+     * @param  boolean $sanitize
+     * @return array           
+     */
+    public function save_data($data, $sanitize = true)
+    {
+        $data = $this->data_source->save($data, $sanitize = true);
+        $this->flush_data();
+
+        return $data;
+    }
+
+    /**
+     * Erase current data
+     */
     public function flush_data()
     {
         $this->data = array();

@@ -39,8 +39,9 @@ List of form controls type:
 
 ## How it works
 
-First, you need to define a data source by extending class `plugme_data_source`.
-In your data source class, you need to define your table name and your primary key name.
+Copy plugme folder inside your plugin folder (ex: wp-content/plugins/mysuperplugin/plugme)
+
+Now that you are ready to use Plugme, you need to define a data source by extending class `plugme_data_source`. In your data source class, set your table name and your primary key name.
 
 ```php
 /**
@@ -222,6 +223,27 @@ $plugme->register_form($form);
 
 
 /**
+ * Form submitted
+ */
+if($plugme->is_form_submitted($_POST)) {
+
+    if($form->validate($_POST)) {
+        $form_pass = true;
+        $item_saved = $form->save_data($_POST);
+        $form->flush_data();
+        // if after saving an item, you want to come back to the list table, 
+        // you need to delete param action. If you want to add an item right after
+        // another one, comment this line
+        unset($_GET['action']);
+    }
+    else {
+        // repush data to the form so we can continue editing it
+        $form->set_data($_POST); 
+    }
+}
+
+
+/**
  * Edit an item
  */
 if($plugme->is_editing_item()) {
@@ -234,78 +256,62 @@ elseif($plugme->is_creating_item()) {
     $form->create_new_item();
 }
 
-/**
- * Form submitted
- */
-if($plugme->is_form_submitted()) {
 
-    if($form->validate()) {
-        $form_pass = true;
-    }
-    else $form_failed = true;
-}
 ?>
 
 <div class="wrap">
 
-<?php if($form->has_data() || $form->is_creating_item()) : ?>
+    <?php if($plugme->is_editing_item() || $plugme->is_creating_item()) : ?>
 
-    <!-- --------------- FORM ----------------- -->
-    <h1>
-        <?php
-            $item = $list_table->get_option('singular');
-            if($plugme->is_creating_item()) {
-                echo __('New').' '.$item;
-            }
-            else {
-                echo __('Edit').' '.$item .' '.$form->get_data($data_source->table_pk);
-            }
-        ?>
-    </h1>
+        <!-- FORM -->
+        <h1>
+            <?php
+                $item = $list_table->get_option('singular');
+                if($plugme->is_creating_item()) {
+                    echo __('New').' '.$item;
+                }
+                else {
+                    echo __('Edit').' '.$item .' '.$form->get_data($data_source->table_pk);
+                }
+            ?>
+        </h1>
 
-    <?php if(isset($form_failed)) : ?>
-        <div class="notice notice-error is-dismissible" id="message">
-            <p><?php _e('Form contain error(s)'); ?></p>
-            <button class="notice-dismiss" type="button">
-                <span class="screen-reader-text">Dismiss this notice.</span>
-            </button>
-        </div>
 
-    <?php elseif(isset($form_pass)): ?>
+        <?php if(isset($form_pass)): ?>
+            <!-- notice -->
+            <div class="notice notice-success is-dismissible" id="message">
+                <p><?php _e('Item saved').' (#'.$item_saved['id'].' - '.$item_saved['name'].')'; ?></p>
+                <button class="notice-dismiss" type="button">
+                    <span class="screen-reader-text">Dismiss this notice.</span>
+                </button>
+            </div>
 
-        <div class="notice notice-success is-dismissible" id="message">
-            <p><?php _e('Item saved'); ?></p>
-            <button class="notice-dismiss" type="button">
-                <span class="screen-reader-text">Dismiss this notice.</span>
-            </button>
-        </div>
+        <?php endif; ?>
+
+        <form id="person-form" class="form-wrap" method="post" enctype="multipart/form-data">
+
+            <?php $form->generate_form('person-form'); ?>
+
+        </form>
+
+    <?php else : ?>
+
+        <!-- LIST TABLE -->
+        <h1>
+            <?php echo $list_table->get_option('plural'); ?>
+            <a class="page-title-action" href="<?php echo $plugme->get_new_item_link(); ?>">
+                <?php _e('Add new'); ?>
+            </a>
+        </h1>
+
+        <form id="person-list-table" method="post">
+            <?php
+                $list_table->prepare_items();
+                $list_table->display();
+            ?>
+        </form>
 
     <?php endif; ?>
-
-    <form id="person-form" class="form-wrap" method="post" enctype="multipart/form-data">
-
-        <?php $form->generate_form('person-form'); ?>
-
-    </form>
-
-<?php else : ?>
-
-    <!-- ------------ LIST TABLE -------------- -->
-    <h1>
-        <?php echo $list_table->get_option('plural'); ?>
-        <a class="page-title-action" href="<?php echo $plugme->get_new_item_link(); ?>">
-            <?php _e('Add new'); ?>
-        </a>
-    </h1>
-
-    <form id="" method="post">
-        <?php
-            $list_table->prepare_items();
-            $list_table->display();
-        ?>
-    </form>
-
-<?php endif; ?>
 
 
 </div>

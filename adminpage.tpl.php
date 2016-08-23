@@ -25,11 +25,14 @@ if($plugme->is_form_submitted($_POST)) {
         $form_pass = true;
         $item_saved = $form->save_data($_POST);
         $form->flush_data();
+        // if after saving an item, you want to come back to the list table, 
+        // you need to delete param action. If you want to add an item right after
+        // another one, comment this line
         unset($_GET['action']);
     }
     else {
-        $form_failed = true;
-        $form->set_data($_POST);
+        // repush data to the form so we can continue editing it
+        $form->set_data($_POST); 
     }
 }
 
@@ -46,8 +49,6 @@ if($plugme->is_editing_item()) {
 elseif($plugme->is_creating_item()) {
     $form->create_new_item();
 }
-
-
 
 
 ?>

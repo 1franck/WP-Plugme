@@ -24,7 +24,7 @@ $sql = "CREATE TABLE IF NOT EXISTS `".$table_name."` (
     `phone` varchar(14),
     `country` varchar(255),
     `note` smallint(6),
-    'role' vachar(255),
+    `role` varchar(255),
     `joindate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
     UNIQUE KEY id (id)
 ) $charset_collate;";

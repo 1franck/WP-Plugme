@@ -133,10 +133,17 @@ abstract class plugme_list_table extends plugme_wp_list_table
 
         if(!$this->column_actions['edit']) unset($actions['edit']);
         if(!$this->column_actions['delete']) unset($actions['delete']);
-        
+
+        //column has already custom column method
+        $custom_col_method = 'column_'.$this->action_column;
+        $data = $item[$this->action_column];
+        if(method_exists($this, $custom_col_method)) {
+            $data = $this->$custom_col_method($item);
+        }
+
         //Return the column cell contents
         return sprintf('<b>%1$s</b> <span style="color:silver">(#%2$s)</span>%3$s',
-            /*$1%s*/ $item[$this->action_column],
+            /*$1%s*/ $data,
             /*$2%s*/ __($item[$this->data_source->table_pk]),
             /*$3%s*/ $this->row_actions($actions)
         );
@@ -360,7 +367,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
             $query .= ' WHERE `'.$this->search_column.'` LIKE "%'.$lookfor.'%"';
         }
 
-        $query .= ' ORDER BY `'.esc_sql($orderby).'` '.esc_sql($order);
+        $query .= ' ORDER BY '.esc_sql($orderby).' '.esc_sql($order);
 
         $offset = ($current_page - 1) * $this->options['items_per_page'];
         $count = $this->options['items_per_page'];

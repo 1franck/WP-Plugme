@@ -360,7 +360,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
             $query .= ' WHERE `'.$this->search_column.'` LIKE "%'.$lookfor.'%"';
         }
 
-        $query .= ' ORDER BY '.esc_sql($orderby).' '.esc_sql($order);
+        $query .= ' ORDER BY `'.esc_sql($orderby).'` '.esc_sql($order);
 
         $offset = ($current_page - 1) * $this->options['items_per_page'];
         $count = $this->options['items_per_page'];

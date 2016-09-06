@@ -1,0 +1,1 @@
+- Fix list table $options['singular'] and $options['plural'] when using french word with accent(bulk action fail)

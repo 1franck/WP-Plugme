@@ -1302,7 +1302,12 @@ class plugme_wp_list_table {
                 );
             } elseif ( method_exists( $this, 'column_' . $column_name ) ) {
                 echo "<td $attributes>";
-                echo call_user_func( array( $this, 'column_' . $column_name ), $item );
+                if($column_name === $this->action_column) {
+                    echo $this->default_action_column($item);
+                }
+                else {
+                    echo call_user_func( array( $this, 'column_' . $column_name ), $item );
+                }
                 echo $this->handle_row_actions( $item, $column_name, $primary );
                 echo "</td>";
             } else {

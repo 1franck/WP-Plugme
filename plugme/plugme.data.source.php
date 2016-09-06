@@ -72,12 +72,40 @@ abstract class plugme_data_source
      */
     public function get($what, $column = null, $field = '*', $return_type = ARRAY_A)
     {
-        $what = esc_sql($what);
         if(!isset($column)) $column = $this->table_pk;
 
-        $query = 'SELECT '.$field.' FROM `'.$this->table.'` WHERE `'.$column.'` = "'.$what.'"';
+        $query = 'SELECT '.$field.' FROM `'.$this->table.'` WHERE `'.esc_sql($column).'` = "'.esc_sql($what).'"';
         //echo $query;
         $result = $this->db->get_row($query, $return_type);
+
+        return $result;
+    }
+
+    /**
+     * Get all records that match where if specified
+     * 
+     * @param  array  $where  ex: array(array('mycolumn', '=>', '10'), array('mycolumn2', '=', 'foo'))
+     * @param  string $field  
+     * @param  string $return_type 
+     * @return array        
+     */
+    public function get_all($where = null, $field = '*', $return_type = ARRAY_A)
+    {
+        if(!isset($column)) $column = $this->table_pk;
+
+        $query = 'SELECT '.$field.' FROM `'.$this->table.'`';
+
+        if(!empty($where)) {
+            $query .= ' WHERE ';
+            $where_string = array();
+            foreach($where as $w) {
+                $where_string[] = '`'.esc_sql($w[0]).'` '.$w[1].' "'.esc_sql($w[2]).'"';
+            }
+            $query .= implode('AND', $where_string);
+        }
+
+        //echo $query;
+        $result = $this->db->get_results($query, $return_type);
 
         return $result;
     }

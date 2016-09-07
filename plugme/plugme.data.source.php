@@ -135,10 +135,14 @@ abstract class plugme_data_source
      */
     public function save($data, $sanitize = true)
     {
+        //nasty wordpres
+        $data = array_map( 'stripslashes_deep', $data);
+
         $data = $this->strip_unwanted_column($data);
 
         if($sanitize) {
-            $data = $this->sanitize_data($data);
+            // dont work with html
+            //$data = $this->sanitize_data($data);
         }
 
         $data = $this->pre_save($data);

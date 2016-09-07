@@ -39,6 +39,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
     protected $default_options = array(   // defaults options
         'singular'         => '',
         'plural'           => '',
+        'slug'             => '', //leave empty to generate automatically
         'items_per_page'   => 10,
         'show_search_box'  => true,
         'show_bulk_action' => true,
@@ -85,6 +86,10 @@ abstract class plugme_list_table extends plugme_wp_list_table
 
         $this->options = array_merge($this->default_options, $this->options);
 
+        if(empty($this->options['slug'])) {
+            $this->generate_slug();
+        }
+
         //Set parent defaults
         parent::__construct($this->options);
 
@@ -118,13 +123,13 @@ abstract class plugme_list_table extends plugme_wp_list_table
         //Build row actions
         $actions = array(
             'edit'      => sprintf(
-                '<a href="?page=%s&action=%s&'.strtolower($this->options['singular']).'=%s">'.__('Edit').'</a>',
+                '<a href="?page=%s&action=%s&'.strtolower($this->options['slug']).'=%s">'.__('Edit').'</a>',
                 $_REQUEST['page'],
                 'edit',
                 $item[$this->data_source->table_pk]
             ),
             'delete'    => sprintf(
-                '<a href="?page=%s&action=%s&'.strtolower($this->options['singular']).'=%s">'.__('Delete').'</a>',
+                '<a href="?page=%s&action=%s&'.strtolower($this->options['slug']).'=%s">'.__('Delete').'</a>',
                 $_REQUEST['page'],
                 'delete',
                 $item[$this->data_source->table_pk]
@@ -160,7 +165,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
     {
         return sprintf(
             '<input type="checkbox" name="%1$s[]" value="%2$s" />',
-            /*$1%s*/ $this->_args['singular'],  //Let's simply repurpose the table's singular label
+            /*$1%s*/ $this->_args['slug'],  //Let's simply repurpose the table's slug label
             /*$2%s*/ $item[$this->data_source->table_pk] //The value of the checkbox should be the record's id
         );
     }
@@ -197,13 +202,34 @@ abstract class plugme_list_table extends plugme_wp_list_table
     }
 
     /**
+     * Generate a slug based on your singular title
+     * 
+     * Slug is used for url arg and will. 
+     * To make it clean, it will replace all special caracter including accent like é à ...
+     */
+    public function generate_slug()
+    {
+        $delimiter = '_';
+        //french chars patch
+        $fr_char    = array('À','Á','Â','à','á','â','È','É','Ê','è','é','ê','Ì','Í','Î','ì','í','î','Ò','Ó','Ô','ò','ó','ô','Ù','Ú','Û','ù','ú','û');
+        $clean_char = array('A','A','A','a','a','a','E','E','E','e','e','e','I','I','I','i','i','i','O','O','O','o','o','o','U','U','U','u','u','u');
+        $str = str_replace($fr_char, $clean_char, $this->options['singular']);
+        $clean = $str;
+        $clean = preg_replace('/[^a-zA-Z0-9\/_|+ -]/', '', $clean);
+        $clean = strtolower(trim($clean, '-'));
+        $clean = preg_replace('/[\/_|+ -]+/', $delimiter, $clean);
+
+        $this->options['slug'] = $clean;
+    }
+
+    /**
      * Get bulk action data
      * 
      * @return array
      */
     public function get_bulk_action_data()
     {
-        $keyname = strtolower($this->options['singular']);
+        $keyname = strtolower($this->options['slug']);
         $source = array();
 
         if(isset($_POST) && !empty($_POST)) {

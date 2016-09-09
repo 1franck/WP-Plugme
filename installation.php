@@ -25,6 +25,7 @@ $sql = "CREATE TABLE IF NOT EXISTS `".$table_name."` (
     `country` varchar(255),
     `note` smallint(6),
     `role` varchar(255),
+    `dt` datetime,
     `joindate` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,    
     UNIQUE KEY id (id)
 ) $charset_collate;";

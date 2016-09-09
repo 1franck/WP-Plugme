@@ -103,6 +103,13 @@ class example_form extends plugme_form
             'description' => 'Example of description for "datepicker" element. (use jquery ui)'
         ),
 
+        'dt' => array(
+            'type'        => 'datetimepicker',
+            'label'       => 'Date & time',
+            'default'     => '',
+            'description' => 'Example of description for "datetimepicker" element. (use jquery datetimepicker)'
+        ),
+
         'country' => array(
             'type'        => 'chosen',
             'label'       => 'Country',

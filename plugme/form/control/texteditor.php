@@ -20,7 +20,7 @@ class plugme_form_control_texteditor extends plugme_form_control
             'teeny'         => true,
             'textarea_rows' => 8,
             'tabindex'      => 1,
-            'media_buttons' => false
+            'media_buttons' => true
         )
     );
 

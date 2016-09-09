@@ -28,6 +28,7 @@ List of form controls type:
 - Media uploading/selecting (wp_media)
 - Chosen (html select with jquery chosen)
 - Datepicker (jquery-ui)
+- Datetimepicker (jquery datetimepicker)
 - Slider (jquery-ui)
 
 

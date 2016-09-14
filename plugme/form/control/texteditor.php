@@ -16,12 +16,13 @@ class plugme_form_control_texteditor extends plugme_form_control
             'required'    => false,
             'placeholder' => '',
         ),
-        'settings'    => array(
+        'settings'    => array( // @see https://developer.wordpress.org/reference/classes/_wp_editors/parse_settings/
             'teeny'         => true,
-            'textarea_rows' => 8,
+            'textarea_rows' => 14,
             'tabindex'      => 1,
             'media_buttons' => true,
             'wpautop'       => false,
+            'editor_css'    => '',
         )
     );
 

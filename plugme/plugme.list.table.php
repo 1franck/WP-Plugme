@@ -211,8 +211,8 @@ abstract class plugme_list_table extends plugme_wp_list_table
     {
         $delimiter = '_';
         //french chars patch
-        $fr_char    = array('À','Á','Â','à','á','â','È','É','Ê','è','é','ê','Ì','Í','Î','ì','í','î','Ò','Ó','Ô','ò','ó','ô','Ù','Ú','Û','ù','ú','û');
-        $clean_char = array('A','A','A','a','a','a','E','E','E','e','e','e','I','I','I','i','i','i','O','O','O','o','o','o','U','U','U','u','u','u');
+        $fr_char    = array('À','Á','Â','à','á','â','Ç','ç','È','É','Ê','è','é','ê','Ì','Í','Î','ì','í','î','Ò','Ó','Ô','ò','ó','ô','Ù','Ú','Û','ù','ú','û');
+        $clean_char = array('A','A','A','a','a','a','C','c','E','E','E','e','e','e','I','I','I','i','i','i','O','O','O','o','o','o','U','U','U','u','u','u');
         $str = str_replace($fr_char, $clean_char, $this->options['singular']);
         $clean = $str;
         $clean = preg_replace('/[^a-zA-Z0-9\/_|+ -]/', '', $clean);

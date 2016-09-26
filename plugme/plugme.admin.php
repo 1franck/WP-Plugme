@@ -80,7 +80,7 @@ class plugme_admin
      */
     public function is_creating_item()
     {
-        if(isset($_GET['action']) && $_GET['action'] === 'new') {
+        if(isset($_GET['action']) && $_GET['action'] === 'new' && !isset($_GET['paged']) && !isset($_GET['orderby'])) {
             return true;
         }
         return false;
@@ -95,7 +95,7 @@ class plugme_admin
     {
         $this->has_registered_list_table();
 
-        if(isset($_GET[strtolower($this->list_table->get_option('slug'))]) && isset($_GET['action']) && $_GET['action'] === 'edit') {
+        if(isset($_GET[strtolower($this->list_table->get_option('slug'))]) && isset($_GET['action']) && $_GET['action'] === 'edit' && !isset($_GET['paged']) && !isset($_GET['orderby'])) {
             return true;
         }
         return false;

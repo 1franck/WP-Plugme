@@ -70,18 +70,6 @@ elseif($plugme->is_creating_item()) {
             ?>
         </h1>
 
-
-        <?php if(isset($form_pass)): ?>
-            <!-- notice -->
-            <div class="notice notice-success is-dismissible" id="message">
-                <p><?php _e('Item saved').' (#'.$item_saved['id'].' - '.$item_saved['name'].')'; ?></p>
-                <button class="notice-dismiss" type="button">
-                    <span class="screen-reader-text">Dismiss this notice.</span>
-                </button>
-            </div>
-
-        <?php endif; ?>
-
         <form id="person-form" class="form-wrap" method="post" enctype="multipart/form-data">
 
             <?php $form->generate_form('person-form'); ?>
@@ -98,7 +86,18 @@ elseif($plugme->is_creating_item()) {
             </a>
         </h1>
 
-        <form id="person-list-table" method="post">
+        <?php if(isset($form_pass)): ?>
+            <!-- notice -->
+            <div class="notice notice-success is-dismissible" id="message">
+                <p><?php _e('Item saved').' (#'.$item_saved['id'].' - '.$item_saved['name'].')'; ?></p>
+                <button class="notice-dismiss" type="button">
+                    <span class="screen-reader-text">Dismiss this notice.</span>
+                </button>
+            </div>
+
+        <?php endif; ?>
+
+        <form id="person-list-table" method="post" action="<?php echo admin_url('admin.php?page=plugme_menu'); ?>">
             <?php
                 $list_table->prepare_items();
                 $list_table->display();

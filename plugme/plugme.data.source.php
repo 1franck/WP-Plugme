@@ -213,6 +213,21 @@ abstract class plugme_data_source
     }
 
     /**
+     * Get columns as key in array with empty value
+     * 
+     * @return array
+     */
+    public function list_columns_as_array_keyname()
+    {
+        $col = $this->list_columns();
+        $array = array();
+        foreach($col as $c) {
+            $array[$c] = '';
+        }
+        return $array;
+    }
+
+    /**
      * Strip unwanted array key based on table column
      * 
      * @param  string $table 

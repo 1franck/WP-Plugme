@@ -16,7 +16,7 @@ abstract class plugme_list_table extends plugme_wp_list_table
      * Overload those props as you need
      */
     protected $default_orderby_column = '';    // default column used for ordering. if empty, $data_source->table_pk will be used
-    protected $search_column          = '';    // column name used for search. if empty, $data_source->table_pk will be used
+    protected $search_column          = '';    // (string of array) column(s) name(s) used for search. if empty, $data_source->table_pk will be used 
     protected $action_column          = '';    // define wich column will receive action(s) link(s) @see default_action_column()
 
     protected $columns_header         = array(); // table columns header caption
@@ -394,7 +394,19 @@ abstract class plugme_list_table extends plugme_wp_list_table
 
         if(!empty($_POST['lookfor'])) {
             $lookfor = $this->db->esc_like($_POST['lookfor']);
-            $query .= ' WHERE '.$this->query_col_prefix.'`'.$this->search_column.'` LIKE "%'.$lookfor.'%"';
+
+            $wheres = array();
+            $search_column = array();
+            if(!is_array($this->search_column)) {
+                $search_column[] = $this->search_column;
+            }
+            else $search_column = $this->search_column;
+
+            foreach($search_column as $c) {
+                $wheres[] = $this->query_col_prefix.'`'.$c.'` LIKE "%'.$lookfor.'%"';
+            }
+
+            $query .= ' WHERE '.implode(' OR ', $wheres);
         }
 
         $query .= ' ORDER BY '.$this->query_col_prefix.'`'.esc_sql($orderby).'` '.esc_sql($order);

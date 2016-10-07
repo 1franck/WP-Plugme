@@ -29,6 +29,8 @@ abstract class plugme_list_table extends plugme_wp_list_table
 
     protected $options = array(); // options @see $default_options
 
+    protected $query_col_prefix; // in case data query use multiple tables (join and cie), we need to specify what is the prefix alias (ex if: select * from table as t; prefix is 't')
+
     /**
      * Don't overload those props
      */
@@ -89,6 +91,8 @@ abstract class plugme_list_table extends plugme_wp_list_table
         if(empty($this->options['slug'])) {
             $this->generate_slug();
         }
+
+        if(!empty($this->query_col_prefix)) $this->query_col_prefix .= '.';
 
         //Set parent defaults
         parent::__construct($this->options);
@@ -390,10 +394,10 @@ abstract class plugme_list_table extends plugme_wp_list_table
 
         if(!empty($_POST['lookfor'])) {
             $lookfor = $this->db->esc_like($_POST['lookfor']);
-            $query .= ' WHERE `'.$this->search_column.'` LIKE "%'.$lookfor.'%"';
+            $query .= ' WHERE '.$this->query_col_prefix.'`'.$this->search_column.'` LIKE "%'.$lookfor.'%"';
         }
 
-        $query .= ' ORDER BY '.esc_sql($orderby).' '.esc_sql($order);
+        $query .= ' ORDER BY '.$this->query_col_prefix.'`'.esc_sql($orderby).'` '.esc_sql($order);
 
         $offset = ($current_page - 1) * $this->options['items_per_page'];
         $count = $this->options['items_per_page'];

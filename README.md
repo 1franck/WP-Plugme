@@ -38,7 +38,7 @@ List of form controls type:
 
 ## How it works
 
-Copy plugme folder inside your plugin folder (ex: wp-content/plugins/mysuperplugin/plugme)
+Copy `/plugme` folder inside your plugin folder (ex: wp-content/plugins/mysuperplugin/plugme)
 
 Now that you are ready to use Plugme, you need to define a data source by extending class `plugme_data_source`. In your data source class, set your table name and your primary key name.
 

@@ -1,10 +1,8 @@
 # Plugme
 
-Copyright (c) 2016 François Lajoie Licensed under the MIT license (http://opensource.org/licenses/mit-license.php)
+**Plugme help you to quickly build Wordpress database driven plugin.**
 
-Plugme help you to quickly build Wordpress database driven plugin.
-
-Plugme is not a Wordpress plugin, it's a plugin helper for developer.
+**Plugme is not a Wordpress plugin, it's a plugin helper for developer.**
 
 In other words, Plugme let you build easily a table list and a form for navigating and managing your plugin data with the native visual style of Wordpress admin.
 
@@ -327,3 +325,4 @@ elseif($plugme->is_creating_item()) {
 </div>
 ```
 
+Copyright (c) 2016 François Lajoie Licensed under the MIT license (http://opensource.org/licenses/mit-license.php)

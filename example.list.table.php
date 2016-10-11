@@ -69,7 +69,8 @@ class example_list_table extends plugme_list_table
 
     public function column_image($item)
     {
-        return '<img width="75px" src="'.site_url().'/'.$item['image'].'" />';
+        if(empty($item['image'])) return 'No image yet';
+        return '<img width="75px" src="'.$item['image'].'" />';
     }
 
     public function column_email($item)

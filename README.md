@@ -42,6 +42,7 @@ Copy `/plugme` folder inside your plugin folder (ex: wp-content/plugins/mysuperp
 
 Now that you are ready to use Plugme, you need to define a data source by extending class `plugme_data_source`. In your data source class, set your table name and your primary key name.
 
+@file example.data.source.php
 ```php
 /**
  * Example of data source class
@@ -66,6 +67,7 @@ class example_data_source extends plugme_data_source
 
 To generate a html table list to naviguate through your table data, extends class `plugme_list_table`
 
+@file example.list.table.php
 ```php
 /**
  * Example of html list table
@@ -147,6 +149,7 @@ class example_list_table extends plugme_list_table
 
 To create a form with validation, extends class `plugme_form`
 
+@file example.form.php
 ```php
 /**
  * Form generation and validation example
@@ -211,6 +214,7 @@ class example_form extends plugme_form
 
 And finally, here a example of what might look your admin template. To make it more flexible, plugme doesn't do everything out of the box. This way, you can customize your plugin template page and integrate plugme anywhere more easily.
 
+@file adminpage.tpl.php
 ```php
 <?php 
 

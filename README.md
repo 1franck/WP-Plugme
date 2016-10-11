@@ -79,12 +79,13 @@ class example_list_table extends plugme_list_table
      * list table settings
      */
     protected $default_orderby_column = 'name';
-    protected $search_column          = 'name';
+    protected $search_column          = array('name', 'occupation');
     protected $action_column          = 'name';
 
     protected $options = array(
         'singular'       => 'Person',
         'plural'         => 'Persons',
+        'items_per_page' => 10,
     );
 
     protected $columns_header = array(
@@ -115,13 +116,21 @@ class example_list_table extends plugme_list_table
     }
 
     /**
-     * Custom bulk action 
-     * Action name: delete
+     * Custom bulk action
      */
     public function bulk_action_delete()
     {
-        //do something
-        wp_die('Items deleted (or they would be if we had items to delete)!');
+        $data = $this->get_bulk_action_data();
+        if(!empty($data)) {
+            $this->data_source->delete($data);
+            echo '
+                <div class="notice notice-success is-dismissible" id="message">
+                    <p>Items '.(is_array($data) ? implode(', ',$data) : $data).' deleted</p>
+                    <button class="notice-dismiss" type="button">
+                        <span class="screen-reader-text">Dismiss this notice.</span>
+                    </button>
+                </div>';
+        }
     }
 
     /**

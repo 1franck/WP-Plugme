@@ -12,7 +12,8 @@ class plugme_form_control_datetimepicker extends plugme_form_control
     protected $default_options = array(
         'label'       => '',
         'format'      => 'Y-m-d H:i',
-        'description' => '',  
+        'description' => '',
+        'datepicker'  => true,
         'attrs' => array(
             'required'    => false,
             'placeholder' => '',
@@ -46,7 +47,10 @@ class plugme_form_control_datetimepicker extends plugme_form_control
             <span class="dashicons dashicons-calendar-alt" style="margin-left:-30px;margin-top:5px;pointer-events: none;"></span><br>
             <script>
                 jQuery(document).ready(function(){
-                    jQuery("#'.$this->attrs_array['id'].'").datetimepicker({ format: "'.$this->options['format'].'" }); 
+                    jQuery("#'.$this->attrs_array['id'].'").datetimepicker({ 
+                        format: "'.$this->options['format'].'", 
+                        datepicker: '.$this->bool2string($this->options['datepicker']).' 
+                    }); 
                 });
             </script>';
 

@@ -147,4 +147,28 @@ abstract class plugme_form_control
         return (json_last_error() == JSON_ERROR_NONE);
     }
 
+    /**
+     * Bool to integer
+     * 
+     * @param  boolean $bool 
+     * @return integer      
+     */
+    protected function bool2int($bool)
+    {
+        if($bool === true) return 1;
+        else return 0;
+    }
+
+    /**
+     * Bool to string
+     * 
+     * @param  boolean $bool 
+     * @return string      
+     */
+    protected function bool2string($bool)
+    {
+        if($bool === true) return 'true';
+        else return 'false';
+    }
+
 }

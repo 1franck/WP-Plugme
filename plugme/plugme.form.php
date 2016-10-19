@@ -200,7 +200,7 @@ abstract class plugme_form
 
             $errors = $this->validation->get_errors();
             $first_field = '';
-            $save_btn = ($this->new_item) ? __('Save') : __('Save changes');
+            $save_btn = ($this->new_item) ? __('Save') : __('Update');
 
             if(!empty($errors)) {
                 echo '

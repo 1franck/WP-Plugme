@@ -153,7 +153,7 @@ abstract class plugme_form_control
      * @param  boolean $bool 
      * @return integer      
      */
-    protected function bool2int($bool)
+    protected function bool2Int($bool)
     {
         if($bool === true) return 1;
         else return 0;
@@ -165,10 +165,25 @@ abstract class plugme_form_control
      * @param  boolean $bool 
      * @return string      
      */
-    protected function bool2string($bool)
+    protected function bool2String($bool)
     {
         if($bool === true) return 'true';
         else return 'false';
+    }
+
+    /**
+     * Transform php array to javascript array
+     * 
+     * @param  array $array 
+     * @return string   
+     */
+    protected function array2JsArray($array)
+    {
+        $final = [];
+        foreach($array as $e) {
+            $final[] = '"'.$e.'"';
+        }
+        return '['.implode(',', $final).']';
     }
 
 }

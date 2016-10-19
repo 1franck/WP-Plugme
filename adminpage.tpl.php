@@ -62,7 +62,7 @@ elseif($plugme->is_creating_item()) {
             <?php
                 $item = $list_table->get_option('singular');
                 if($plugme->is_creating_item()) {
-                    echo __('New').' '.$item;
+                    echo __('Add').' '.$item;
                 }
                 else {
                     echo __('Edit').' '.$item .' '.$form->get_data($data_source->table_pk);
@@ -70,9 +70,9 @@ elseif($plugme->is_creating_item()) {
             ?>
         </h1>
 
-        <form id="person-form" class="form-wrap" method="post" enctype="multipart/form-data">
+        <form id="data-form" class="form-wrap" method="post" enctype="multipart/form-data">
 
-            <?php $form->generate_form('person-form'); ?>
+            <?php $form->generate_form('data-form'); ?>
 
         </form>
 
@@ -82,7 +82,7 @@ elseif($plugme->is_creating_item()) {
         <h1>
             <?php echo $list_table->get_option('plural'); ?>
             <a class="page-title-action" href="<?php echo $plugme->get_new_item_link(); ?>">
-                <?php _e('Add new'); ?>
+                <?php _e('Add'); ?>
             </a>
         </h1>
 
@@ -97,7 +97,7 @@ elseif($plugme->is_creating_item()) {
 
         <?php endif; ?>
 
-        <form id="person-list-table" method="post" action="<?php echo admin_url('admin.php?page=plugme_menu'); ?>">
+        <form id="data-list-table" method="post" action="<?php echo admin_url('admin.php?page='.$_GET['page']); ?>">
             <?php
                 $list_table->prepare_items();
                 $list_table->display();

@@ -9,7 +9,7 @@ include_once dirname(__FILE__).'/plugme/plugme.data.source.php';
 class example_data_source extends plugme_data_source
 {
     protected $table = 'plugme_example';
-    protected $table_primary_column = 'id';
+    protected $table_pk = 'id';
 
     // called after class construct
     public function init() {}

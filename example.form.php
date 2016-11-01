@@ -133,6 +133,18 @@ class example_form extends plugme_form
             'description' => 'Example of description for "image" element. (use wp_media)',
         ),
 
+        'color' => array(
+            'type'        => 'colorpicker',
+            'label'       => 'Color',
+            'description' => 'Example of description for "colorpicker" element.',            
+        ),
+
+        'bgcolor' => array(
+            'type'        => 'colorpicker',
+            'label'       => 'Background color',
+            'description' => 'Example of description for "colorpicker" element.',            
+        ),
+
         'occupation' => array(
             'type'        => 'textarea',
             'label'       => 'Occupation',

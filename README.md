@@ -10,7 +10,7 @@ In other words, Plugme let you build easily a table list and a form for navigati
 Highlights:
 - easy to use
 - native look of wordpress
-- 11 form components including wordpress text editor (wp_editor), and wordpress media upload (wp_media)
+- 12 form components including wordpress text editor (wp_editor), and wordpress media upload (wp_media)
 - list table support pagination, column sorting, search, and bulk actions
 - powerfull form validation
 - extends form control and validation by adding your own
@@ -28,6 +28,7 @@ List of form controls type:
 - Datepicker (jquery-ui)
 - Datetimepicker (jquery datetimepicker)
 - Slider (jquery-ui)
+- Advanced color picker
 
 
 ## List table example:

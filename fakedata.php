@@ -18,6 +18,8 @@ return
             'phone'       => '984-555-5453',
             'country'     => 'US',
             'joindate'    => '2015-11-03',
+            'color'       => '#39CCCC',
+            'bgcolor'     => '#FF851B',
         ),
 
         array(
@@ -33,6 +35,8 @@ return
             'phone'       => '984-555-5453',
             'country'     => 'US',
             'joindate'    => '2015-11-03',
+            'color'       => '#39CCCC',
+            'bgcolor'     => '#FF851B',
         ),
 
         array(
@@ -48,6 +52,8 @@ return
             'phone'       => '756-444-9200',
             'country'     => 'CA',
             'joindate'    => '2014-08-25',
+            'color'       => '#39CCCC',
+            'bgcolor'     => '#FF851B',
         ),
 
         array(
@@ -63,6 +69,8 @@ return
             'phone'       => '534-677-3439',
             'country'     => 'CA',
             'joindate'    => '2011-08-25',
+            'color'       => '#39CCCC',
+            'bgcolor'     => '#FF851B',
         ),
 
 
@@ -79,5 +87,7 @@ return
             'phone'       => '848-455-7266',
             'country'     => 'CA',
             'joindate'    => '2012-05-13',
+            'color'       => '#39CCCC',
+            'bgcolor'     => '#FF851B',
         ),
     );

@@ -15,14 +15,15 @@ abstract class plugme_list_table extends plugme_wp_list_table
     /**
      * Overload those props as you need
      */
-    protected $default_orderby_column = '';    // default column used for ordering. if empty, $data_source->table_pk will be used
-    protected $search_column          = '';    // (string of array) column(s) name(s) used for search. if empty, $data_source->table_pk will be used 
-    protected $action_column          = '';    // define wich column will receive action(s) link(s) @see default_action_column()
-
-    protected $columns_header         = array(); // table columns header caption
-    protected $sortable_columns       = array(); // specify which column can be sorted
-    protected $bulk_actions           = array(); // bulk action dropdown item
-    protected $column_actions         = array(
+    protected $default_orderby_column    = '';    // default column used for ordering. if empty, $data_source->table_pk will be used
+    protected $default_orderby_direction = 'ASC'; // default direction for orderby (asc or desc)
+    protected $search_column             = '';    // (string of array) column(s) name(s) used for search. if empty, $data_source->table_pk will be used 
+    protected $action_column             = '';    // define wich column will receive action(s) link(s) @see default_action_column()
+    
+    protected $columns_header            = array(); // table columns header caption
+    protected $sortable_columns          = array(); // specify which column can be sorted
+    protected $bulk_actions              = array(); // bulk action dropdown item
+    protected $column_actions            = array(
         'edit'   => true,
         'delete' => true,
     );
@@ -389,8 +390,8 @@ abstract class plugme_list_table extends plugme_wp_list_table
     {
         $query = $this->set_data_query();
 
-        $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : $this->default_orderby_column; //If no sort, default to title
-        $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : 'asc'; //If no order, default to asc
+        $orderby = (!empty($_REQUEST['orderby'])) ? $_REQUEST['orderby'] : $this->default_orderby_column; 
+        $order = (!empty($_REQUEST['order'])) ? $_REQUEST['order'] : $this->default_orderby_direction;
 
         if(!empty($_POST['lookfor'])) {
             $lookfor = $this->db->esc_like($_POST['lookfor']);

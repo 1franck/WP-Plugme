@@ -11,9 +11,10 @@ class example_list_table extends plugme_list_table
     /**
      * list table settings
      */
-    protected $default_orderby_column = 'name';
-    protected $search_column          = array('name', 'occupation');
-    protected $action_column          = 'name';
+    protected $default_orderby_column    = 'name';
+    protected $default_orderby_direction = 'ASC';
+    protected $search_column             = array('name', 'occupation');
+    protected $action_column             = 'name';
 
     protected $options = array(
         'singular'       => 'Person',

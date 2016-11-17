@@ -114,6 +114,12 @@ abstract class plugme_list_table extends plugme_wp_list_table
                 return $this->default_action_column($item);
                 break;
             default:
+                if(!array_key_exists($cn, $item)) {
+                    if(WP_DEBUG === true) {
+                        wp_die('[Field "'.$cn.'" doesn\'t exists]');
+                    }
+                    return '';
+                }
                 return $item[$cn];
         }
     }

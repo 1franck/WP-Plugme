@@ -15,7 +15,7 @@ class plugme_form_control_textarea extends plugme_form_control
         'attrs' => array(
             'required'    => false,
             'placeholder' => '',
-            'row'         => 3,
+            'rows'        => 3,
             'class'       => 'large-text',
         ),
     );
